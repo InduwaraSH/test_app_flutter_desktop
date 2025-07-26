@@ -90,7 +90,9 @@ class _HomepgState extends State<Homepg> {
                               (MediaQuery.of(context).size.width - 330) * 0.25,
                           height: 150,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.onInverseSurface,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onInverseSurface,
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
@@ -101,7 +103,9 @@ class _HomepgState extends State<Homepg> {
                               (MediaQuery.of(context).size.width - 330) * 0.25,
                           height: 150,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.onInverseSurface,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onInverseSurface,
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
