@@ -26,3 +26,15 @@ ThemeData darkTheme = ThemeData(
     onInverseSurface: Color.fromRGBO(0, 96, 2, 1),
   ),
 );
+
+Map<String, Color> statusColors = {
+  "Recived": Colors.green.shade400,
+  "Authorized": Colors.blue.shade400,
+  "Rejected": Colors.red.shade400,
+};
+
+Map<String, String> dbPaths = {
+  "Recived": "db/recived_data",
+  "Authorized": "db/authorized_data",
+  "Rejected": "db/rejected_data",
+};
