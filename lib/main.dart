@@ -5,14 +5,18 @@ import 'package:provider/provider.dart';
 import 'package:test_code/Home.dart';
 import 'package:test_code/constant.dart';
 import 'package:test_code/firebase_options.dart';
+import 'package:test_code/selected_provider.dart';
 import 'package:test_code/theme_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => SelectionProvider()),
+      ],
       child: const MyApp(),
     ),
   );

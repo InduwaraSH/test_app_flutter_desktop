@@ -7,6 +7,7 @@ import 'package:frosted_glass_effect/frosted_glass_effect.dart';
 import 'package:provider/provider.dart';
 import 'package:test_code/animated_but.dart';
 import 'package:test_code/button.dart';
+import 'package:test_code/selected_provider.dart';
 import 'package:test_code/theme_provider.dart';
 
 class Homepg extends StatefulWidget {
@@ -62,6 +63,8 @@ class _HomepgState extends State<Homepg> {
               Column(
                 children: [
                   SizedBox(height: 30),
+
+                  //middle container
                   Container(
                     width: (MediaQuery.of(context).size.width - 100) * 0.25,
                     height: MediaQuery.of(context).size.height * 0.9,
@@ -69,47 +72,93 @@ class _HomepgState extends State<Homepg> {
                       color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(26),
                     ),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 30),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(height: 30),
 
-                        Container(
-                          width:
-                              (MediaQuery.of(context).size.width - 330) * 0.25,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.onSecondary,
-                            borderRadius: BorderRadius.circular(15),
+                          Container(
+                            width:
+                                (MediaQuery.of(context).size.width - 330) *
+                                0.25,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.onSecondary,
+                              borderRadius: BorderRadius.circular(15),
+                              
+                            ),
+                            child: Center(child: Text(Provider.of<SelectionProvider>(context).selected ?? "None")),
                           ),
-                        ),
 
-                        SizedBox(height: 30),
+                          SizedBox(height: 30),
 
-                        Container(
-                          width:
-                              (MediaQuery.of(context).size.width - 330) * 0.25,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onInverseSurface,
-                            borderRadius: BorderRadius.circular(15),
+                          Container(
+                            width:
+                                (MediaQuery.of(context).size.width - 330) *
+                                0.25,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onInverseSurface,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 30),
+                          SizedBox(height: 30),
 
-                        Container(
-                          width:
-                              (MediaQuery.of(context).size.width - 330) * 0.25,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onInverseSurface,
-                            borderRadius: BorderRadius.circular(15),
+                          Container(
+                            width:
+                                (MediaQuery.of(context).size.width - 330) *
+                                0.25,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onInverseSurface,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 30),
+                          Container(
+                            width:
+                                (MediaQuery.of(context).size.width - 330) *
+                                0.25,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onInverseSurface,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                          Container(
+                            width:
+                                (MediaQuery.of(context).size.width - 330) *
+                                0.25,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onInverseSurface,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                          Container(
+                            width:
+                                (MediaQuery.of(context).size.width - 330) *
+                                0.25,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onInverseSurface,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

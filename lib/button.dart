@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:test_code/selected_provider.dart';
 
 void main() {
   runApp(MaterialApp(home: ButtonSelectionDemo()));
@@ -12,10 +14,14 @@ class ButtonSelectionDemo extends StatefulWidget {
 class _ButtonSelectionDemoState extends State<ButtonSelectionDemo> {
   String? activeButton;
 
-  void setActive(String color) {
+  void setActive(String key) {
     setState(() {
-      activeButton = color;
+      activeButton = key;
     });
+
+    String result = getSelectedValue();
+    print("Pressed button: $key");
+    Provider.of<SelectionProvider>(context, listen: false).setSelected(key);
   }
 
   @override
@@ -43,14 +49,18 @@ class _ButtonSelectionDemoState extends State<ButtonSelectionDemo> {
         minimumSize: Size(210, 50),
         backgroundColor: isActive ? color : Colors.white,
         foregroundColor: isActive ? Colors.white : Colors.black,
-        elevation: isActive ? 10 : 2, 
+        elevation: isActive ? 10 : 2,
         shadowColor: isActive
             ? color.withValues(alpha: 0.9)
-            : const Color.fromARGB(255, 255, 255, 255).withOpacity(0.4), 
+            : const Color.fromARGB(255, 255, 255, 255).withOpacity(0.4),
         //side: BorderSide(color: color, width: 2),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       ),
       child: Text(key.toUpperCase()),
     );
+  }
+
+  String getSelectedValue() {
+    return activeButton ?? '';
   }
 }
