@@ -24,63 +24,120 @@ class _homeState extends State<alerts> {
     final String dangerLevel = Alerts['Danger Level'];
 
     Color colour_picked = Colors.pinkAccent;
+    Color PrimaryTextColour = Colors.white;
+    Color SecondaryTextColour = Colors.white;
 
-    if (Provider.of<SelectionProvider>(context).selected == "Rejected") {
-      colour_picked = Theme.of(context).colorScheme.onPrimary;
+    if (Provider.of<SelectionProvider>(context).selected == "Recived") {
+      colour_picked = Theme.of(context).colorScheme.onSecondaryContainer;
+      PrimaryTextColour = Theme.of(context).colorScheme.onSecondaryFixed;
+      ;
+
+      SecondaryTextColour = Theme.of(
+        context,
+      ).colorScheme.onSecondaryFixedVariant;
+      ;
     } else if (Provider.of<SelectionProvider>(context).selected ==
         "Authorized") {
-      colour_picked = Theme.of(context).colorScheme.onSecondary;
-    } else if (Provider.of<SelectionProvider>(context).selected == "Recived") {
-      colour_picked = const Color.fromARGB(255, 251, 33, 33);
+      colour_picked = Theme.of(context).colorScheme.onPrimaryContainer;
+      PrimaryTextColour = Theme.of(context).colorScheme.onPrimaryFixed;
+      ;
+
+      SecondaryTextColour = Theme.of(context).colorScheme.onPrimaryFixedVariant;
+      ;
+    } else if (Provider.of<SelectionProvider>(context).selected == "Rejected") {
+      colour_picked = Theme.of(context).colorScheme.onSurface;
+      PrimaryTextColour = Theme.of(context).colorScheme.onSurfaceVariant;
+      ;
+
+      SecondaryTextColour = Theme.of(context).colorScheme.onTertiary;
+      ;
     } else {}
 
     return Container(
       padding: EdgeInsets.all(10),
-      margin: EdgeInsets.all(10),
-      width: (MediaQuery.of(context).size.width - 330) * 0.25,
+      margin: EdgeInsets.only(top: 5, bottom: 10, left: 15, right: 15),
+      width: (MediaQuery.of(context).size.width - 330) * 0.20,
       height: 150,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onInverseSurface,
+        color: colour_picked,
         borderRadius: BorderRadius.circular(15),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(Icons.notifications, color: colour_picked, size: 25),
-              SizedBox(width: 2),
               Text(
-                Alerts['Tree Name'],
+                Alerts['District'],
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 25,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'sfpro',
-                  color: colour_picked,
+                  color: PrimaryTextColour,
                 ),
+              ),
+
+              Icon(
+                Icons.info_outline_rounded,
+                color: PrimaryTextColour,
+                size: 25,
               ),
             ],
           ),
           SizedBox(height: 5),
           Text(
-            Alerts['District'],
+            "Danger Level : " + Alerts['Danger Level'],
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w400,
               fontFamily: 'sfpro',
-              color: const Color.fromARGB(255, 107, 107, 107),
+              color: SecondaryTextColour,
             ),
             // or ellipsis if you want cut-off
           ),
-          SizedBox(width: 2),
-          Text(
-            Alerts['Height of Tree'],
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'sfpro',
-              color: colour_picked,
-            ),
+          SizedBox(height: 20),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.forest, color: PrimaryTextColour, size: 20),
+                  SizedBox(width: 5),
+                  Text(
+                    Alerts['Tree Name'],
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'sfpro',
+                      color: PrimaryTextColour,
+                    ),
+                  ),
+                  SizedBox(width: 15),
+                ],
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.height_rounded,
+                    color: PrimaryTextColour,
+                    size: 20,
+                  ),
+
+                  Text(
+                    Alerts['Height of Tree'],
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'sfpro',
+                      color: PrimaryTextColour,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
@@ -91,11 +148,10 @@ class _homeState extends State<alerts> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            margin: EdgeInsets.only(bottom: 20, top: 10),
-            padding: EdgeInsets.only(bottom: 30),
+            margin: EdgeInsets.only(bottom: 40, top: 10),
+            padding: EdgeInsets.only(bottom: 10, top: 10),
             width: (MediaQuery.of(context).size.width - 100) * 0.25,
             height: MediaQuery.of(context).size.height * 0.9,
             decoration: BoxDecoration(
@@ -103,10 +159,8 @@ class _homeState extends State<alerts> {
               borderRadius: BorderRadius.circular(26),
             ),
             child: FirebaseAnimatedList(
-              shrinkWrap: true, // Important!
-              physics:
-                  NeverScrollableScrollPhysics(), // Let outer scroll handle
-              reverse: true,
+              // Let outer scroll handle
+              reverse: false,
               query: dbref_alerts,
               itemBuilder:
                   (
