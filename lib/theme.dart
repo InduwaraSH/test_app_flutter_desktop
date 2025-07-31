@@ -23,6 +23,8 @@ ThemeData lightTheme = ThemeData(
 
     onSurfaceVariant: Color.fromRGBO(164, 46, 152, 100),
     onTertiary: Color.fromRGBO(243, 161, 231, 1),
+
+    outline: Colors.black
   ),
 );
 
@@ -48,6 +50,8 @@ ThemeData darkTheme = ThemeData(
 
     onSurfaceVariant: Color.fromRGBO(0, 0, 0, 1),
     onTertiary: Color.fromRGBO(255, 207, 249, 100),
+
+    outline: Colors.white,
   ),
 );
 
