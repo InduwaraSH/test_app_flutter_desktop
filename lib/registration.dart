@@ -320,6 +320,69 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                   ),
                 ),
+                CupertinoButton(
+                  child: Text(
+                    'register p[erson]',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.green,
+                      fontFamily: 'sfpro',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    if (personId.text.isEmpty ||
+                        personName.text.isEmpty ||
+                        personPassword.text.isEmpty ||
+                        personPasswordConfirm.text.isEmpty ||
+                        personPassword.text != personPasswordConfirm.text) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Please fill all fields correctly',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          duration: Duration(seconds: 5),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    } else {
+                      Map<String, String> managerData = {
+                        "managerId": personId.text,
+                        "managerName": personName.text,
+                        "managerPassword": personPassword.text,
+                      };
+                      managerReference
+                          .push()
+                          .set(managerData)
+                          .then((_) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Registration Successful ' + personName.text,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                duration: Duration(seconds: 5),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          })
+                          .catchError((error) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Failed to save manager data: $error",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                duration: Duration(seconds: 5),
+                                backgroundColor: Colors.redAccent,
+                              ),
+                            );
+                          });
+                    }
+                  },
+                ),
               ],
             ),
           ),
