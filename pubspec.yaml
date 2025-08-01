@@ -82,6 +82,11 @@ flutter:
     - family: sfpro
       fonts:
         - asset: fonts/sfpro.ttf
+    
+    - family: lobstertwo
+      fonts:
+        - asset: fonts/lobstertwo.ttf
+        
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

@@ -1,9 +1,37 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_code/picker.dart';
 
-class RegistrationPage extends StatelessWidget {
+class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
+
+  @override
+  State<RegistrationPage> createState() => _RegistrationPageState();
+}
+
+class _RegistrationPageState extends State<RegistrationPage> {
+  final branchName = TextEditingController();
+  final branchId = TextEditingController();
+  final branchPassword = TextEditingController();
+  final branchPasswordConfirm = TextEditingController();
+  final locationController = TextEditingController();
+
+  //Person data
+  final personName = TextEditingController();
+  final personId = TextEditingController();
+  final personPassword = TextEditingController();
+  final personPasswordConfirm = TextEditingController();
+
+  late DatabaseReference branchReference;
+  late DatabaseReference managerReference;
+
+  @override
+  void initState() {
+    super.initState();
+    branchReference = FirebaseDatabase.instance.ref().child("branches");
+    managerReference = FirebaseDatabase.instance.ref().child("managers");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +46,8 @@ class RegistrationPage extends StatelessWidget {
                 Text(
                   "Registration",
                   style: TextStyle(
-                    fontSize: 30,
-                    fontFamily: 'sfpro',
+                    fontSize: 50,
+                    fontFamily: 'lobstertwo',
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.outline,
                   ),
@@ -58,6 +86,7 @@ class RegistrationPage extends StatelessWidget {
                             ),
                           ),
                           child: CupertinoTextFormFieldRow(
+                            controller: branchId,
                             cursorColor: Colors.black,
                             placeholder: 'Enter branch id',
                             onSaved: (value) {
@@ -75,7 +104,12 @@ class RegistrationPage extends StatelessWidget {
                               color: Theme.of(context).colorScheme.outline,
                             ),
                           ),
-                          child: Row(children: [SizedBox(width: 30), Picker()]),
+                          child: Row(
+                            children: [
+                              SizedBox(width: 30),
+                              Picker(controller: locationController),
+                            ],
+                          ),
                         ),
                         CupertinoFormRow(
                           prefix: Text(
@@ -87,6 +121,7 @@ class RegistrationPage extends StatelessWidget {
                             ),
                           ),
                           child: CupertinoTextFormFieldRow(
+                            controller: branchPassword,
                             cursorColor: Colors.black,
                             placeholder: 'Enter branch password',
                             onSaved: (value) {
@@ -105,6 +140,7 @@ class RegistrationPage extends StatelessWidget {
                           ),
                           child: CupertinoTextFormFieldRow(
                             cursorColor: Colors.black,
+                            controller: branchPasswordConfirm,
                             placeholder: 'Re Enter branch password',
                             onSaved: (value) {
                               print(value);
@@ -151,6 +187,7 @@ class RegistrationPage extends StatelessWidget {
                           ),
                           child: CupertinoTextFormFieldRow(
                             cursorColor: Colors.black,
+                            controller: personId,
                             placeholder: 'Enter branch id',
                             onSaved: (value) {
                               print(value);
@@ -168,6 +205,7 @@ class RegistrationPage extends StatelessWidget {
                           ),
                           child: CupertinoTextFormFieldRow(
                             cursorColor: Colors.black,
+                            controller: personName,
                             placeholder: 'Enter branch id',
                             onSaved: (value) {
                               print(value);
@@ -186,6 +224,7 @@ class RegistrationPage extends StatelessWidget {
                           ),
                           child: CupertinoTextFormFieldRow(
                             cursorColor: Colors.black,
+                            controller: personPassword,
                             placeholder: 'Enter manager password',
                             onSaved: (value) {
                               print(value);
@@ -203,6 +242,7 @@ class RegistrationPage extends StatelessWidget {
                           ),
                           child: CupertinoTextFormFieldRow(
                             cursorColor: Colors.black,
+                            controller: personPasswordConfirm,
                             placeholder: 'Re Enter manager password',
                             onSaved: (value) {
                               print(value);
@@ -217,8 +257,68 @@ class RegistrationPage extends StatelessWidget {
                 CupertinoButton(
                   color: CupertinoColors.black,
 
-                  onPressed: () {},
-                  child: Text('Submit', style: TextStyle(color: Colors.white)),
+                  onPressed: () {
+                    if (branchId.text.isEmpty ||
+                        branchPassword.text.isEmpty ||
+                        locationController.text.isEmpty ||
+                        branchPasswordConfirm.text.isEmpty ||
+                        branchPassword.text != branchPasswordConfirm.text) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Please fill all fields correctly',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          duration: Duration(seconds: 5),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    } else {
+                      Map<String, String> branchData = {
+                        "branchId": branchId.text,
+                        "branchPassword": branchPassword.text,
+                        "branchLocation": locationController.text,
+                      };
+                      branchReference
+                          .push()
+                          .set(branchData)
+                          .then((_) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Registration Successful ' +
+                                      locationController.text,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                duration: Duration(seconds: 5),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          })
+                          .catchError((error) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Failed to save branch data: $error",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                duration: Duration(seconds: 5),
+                                backgroundColor: Colors.redAccent,
+                              ),
+                            );
+                          });
+                    }
+                  },
+                  child: Text(
+                    'Register',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontFamily: 'sfpro',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),

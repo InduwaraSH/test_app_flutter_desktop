@@ -2,13 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Picker extends StatefulWidget {
-  const Picker({super.key});
+  final TextEditingController controller; 
+  const Picker({super.key, required this.controller});
 
   @override
   State<Picker> createState() => _PickerState();
 }
 
 class _PickerState extends State<Picker> {
+
+
+
   int _selectedTown = 0;
   int _selectedTown_Drop = 0;
   static const double _kItemExtent = 32.0;
@@ -73,6 +77,7 @@ class _PickerState extends State<Picker> {
                             onSelectedItemChanged: (int selectedItem) {
                               setState(() {
                                 _selectedTown = selectedItem;
+                                widget.controller.text = _townName[selectedItem];
                               });
                             },
                             children: List<Widget>.generate(_townName.length, (
@@ -95,9 +100,11 @@ class _PickerState extends State<Picker> {
                             ),
                             child: Text(
                               _townName[_selectedTown],
+                              
                               style: const TextStyle(
                                 fontSize: 20.0,
                                 color: Colors.black,
+                                
                               ),
                             ),
                           ),
