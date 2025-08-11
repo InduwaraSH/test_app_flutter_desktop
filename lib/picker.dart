@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Picker extends StatefulWidget {
-  final TextEditingController controller; 
-  const Picker({super.key, required this.controller});
+  final TextEditingController controller;
+  final List<String> townNames;
+  const Picker({super.key, required this.controller, required this.townNames});
 
   @override
   State<Picker> createState() => _PickerState();
@@ -16,16 +17,16 @@ class _PickerState extends State<Picker> {
   int _selectedTown = 0;
   int _selectedTown_Drop = 0;
   static const double _kItemExtent = 32.0;
-  static const List<String> _townName = <String>[
-    'Maharagama',
-    'Embilipitya',
-    'Matara',
-    'Galle',
-    'Colombo',
-    'Trinco',
-    'Walasmulla',
-    'Negambo',
-  ];
+  // static const List<String> _townName = <String>[
+  //   'Maharagama',
+  //   'Embilipitya',
+  //   'Matara',
+  //   'Galle',
+  //   'Colombo',
+  //   'Trinco',
+  //   'Walasmulla',
+  //   'Negambo',
+  // ];
 
   void _showDialog(Widget child) {
     showCupertinoModalPopup<void>(
@@ -77,13 +78,13 @@ class _PickerState extends State<Picker> {
                             onSelectedItemChanged: (int selectedItem) {
                               setState(() {
                                 _selectedTown = selectedItem;
-                                widget.controller.text = _townName[selectedItem];
+                                widget.controller.text = widget.townNames[selectedItem];
                               });
                             },
-                            children: List<Widget>.generate(_townName.length, (
+                            children: List<Widget>.generate(widget.townNames.length, (
                               int index,
                             ) {
-                              return Center(child: Text(_townName[index]));
+                              return Center(child: Text(widget.townNames[index]));
                             }),
                           ),
                         ),
@@ -99,8 +100,8 @@ class _PickerState extends State<Picker> {
                               bottom: 5.0,
                             ),
                             child: Text(
-                              _townName[_selectedTown],
-                              
+                              widget.townNames[_selectedTown],
+
                               style: const TextStyle(
                                 fontSize: 20.0,
                                 color: Colors.black,

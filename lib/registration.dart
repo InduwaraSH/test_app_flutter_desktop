@@ -22,15 +22,34 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final personId = TextEditingController();
   final personPassword = TextEditingController();
   final personPasswordConfirm = TextEditingController();
+  final mobileNumber = TextEditingController();
+  final employeePositionController = TextEditingController();
 
   late DatabaseReference branchReference;
-  late DatabaseReference managerReference;
+  late DatabaseReference employeeReference;
+
+  final List<String> myTowns = [
+    'Maharagama',
+    'Embilipitiya',
+    'Matara',
+    'Galle',
+    'Colombo',
+    'Trinco',
+    'Walasmulla',
+    'Negombo',
+  ];
+
+  final List<String> jobRoles = [
+    'Manager',
+    'Assistant Manager',
+    'Area Manager',
+  ];
 
   @override
   void initState() {
     super.initState();
     branchReference = FirebaseDatabase.instance.ref().child("branches");
-    managerReference = FirebaseDatabase.instance.ref().child("managers");
+    employeeReference = FirebaseDatabase.instance.ref().child("employees");
   }
 
   @override
@@ -107,7 +126,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           child: Row(
                             children: [
                               SizedBox(width: 30),
-                              Picker(controller: locationController),
+                              Picker(
+                                controller: locationController,
+                                townNames: myTowns,
+                              ),
                             ],
                           ),
                         ),
@@ -168,7 +190,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         borderRadius: BorderRadius.circular(26),
                       ),
                       header: Text(
-                        'Manager details',
+                        'Employee details',
                         style: TextStyle(
                           fontFamily: 'sfpro',
 
@@ -178,7 +200,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       children: [
                         CupertinoFormRow(
                           prefix: Text(
-                            'Manager Id',
+                            'Employee Id',
                             style: TextStyle(
                               fontFamily: 'sfpro',
                               fontWeight: FontWeight.bold,
@@ -196,7 +218,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         ),
                         CupertinoFormRow(
                           prefix: Text(
-                            'Manager Name',
+                            'Employee Name',
                             style: TextStyle(
                               fontFamily: 'sfpro',
                               fontWeight: FontWeight.bold,
@@ -210,6 +232,46 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             onSaved: (value) {
                               print(value);
                             },
+                          ),
+                        ),
+
+                        CupertinoFormRow(
+                          prefix: Text(
+                            'Personal Mobile Number',
+                            style: TextStyle(
+                              fontFamily: 'sfpro',
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                          ),
+                          child: CupertinoTextFormFieldRow(
+                            cursorColor: Colors.black,
+                            controller:mobileNumber ,
+                            placeholder: 'Enter branch id',
+                            onSaved: (value) {
+                              print(value);
+                            },
+                          ),
+                        ),
+
+                        CupertinoFormRow(
+                          prefix: Text(
+                            'Employee Position',
+                            style: TextStyle(
+                              fontFamily: 'sfpro',
+
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(width: 30),
+                              Picker(
+                                controller: employeePositionController,
+                                townNames: jobRoles,
+                              ),
+                            ],
                           ),
                         ),
 
@@ -322,7 +384,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
                 CupertinoButton(
                   child: Text(
-                    'register p[erson]',
+                    'register person]',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.green,
@@ -333,6 +395,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   onPressed: () {
                     if (personId.text.isEmpty ||
                         personName.text.isEmpty ||
+                        mobileNumber.text.isEmpty ||
+                        mobileNumber.text.length != 10 ||
+                        employeePositionController.text.isEmpty ||
                         personPassword.text.isEmpty ||
                         personPasswordConfirm.text.isEmpty ||
                         personPassword.text != personPasswordConfirm.text) {
@@ -348,19 +413,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       );
                       return;
                     } else {
-                      Map<String, String> managerData = {
-                        "managerId": personId.text,
-                        "managerName": personName.text,
-                        "managerPassword": personPassword.text,
+                      Map<String, String> employeeData = {
+                        "employeeId": personId.text,
+                        "employeeName": personName.text,
+                        "employeeMobile": mobileNumber.text,
+                        "employeePosition": employeePositionController.text,
+                        "employeePassword": personPassword.text,
                       };
-                      managerReference
+                      employeeReference
                           .push()
-                          .set(managerData)
+                          .set(employeeData)
                           .then((_) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  'Registration Successful ' + personName.text,
+                                  personName.text+' Registration Request Sent Successfully',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 duration: Duration(seconds: 5),
