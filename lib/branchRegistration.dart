@@ -50,7 +50,7 @@ class _BranchRegistrationState extends State<BranchRegistration> {
               children: [
                 SizedBox(height: 50),
                 Text(
-                  "Branch Registration",
+                  "Office Registration",
                   style: TextStyle(
                     fontSize: 50,
                     fontFamily: 'lobstertwo',
@@ -59,10 +59,16 @@ class _BranchRegistrationState extends State<BranchRegistration> {
                   ),
                 ),
                 SizedBox(height: 0),
-                SizedBox(
-                  width: 300,
-                  height: 300,
-                  child: Lottie.asset('assets/Company.json', fit: BoxFit.fill),
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: SizedBox(
+                    width: 300,
+                    height: 300,
+                    child: Lottie.asset(
+                      'assets/Company.json',
+                      fit: BoxFit.fill,
+                    ),
+                  ),
                 ),
                 Container(
                   width: (MediaQuery.of(context).size.width - 100) * 0.82,

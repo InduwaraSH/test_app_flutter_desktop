@@ -6,6 +6,7 @@ import 'package:test_code/Home.dart';
 import 'package:test_code/constant.dart';
 import 'package:test_code/firebase_options.dart';
 import 'package:test_code/branchRegistration.dart';
+import 'package:test_code/firstpage.dart';
 import 'package:test_code/selected_provider.dart';
 import 'package:test_code/theme_provider.dart';
 
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeProvider>(context).themeData,
-      home: BranchRegistration(),
+      home: Firstpage(),
     );
 
     // Add more color containers here
