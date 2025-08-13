@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:test_code/branchRegistration.dart';
+import 'package:test_code/personregitration.dart';
 
 class Firstpage extends StatelessWidget {
   const Firstpage({super.key});
@@ -8,6 +10,7 @@ class Firstpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Row(
         children: [
           Column(
@@ -31,7 +34,7 @@ class Firstpage extends StatelessWidget {
                 width: 600,
                 height: 500,
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Column(
@@ -55,19 +58,19 @@ class Firstpage extends StatelessWidget {
                         Form.maybeOf(primaryFocus!.context!)?.save();
                       },
                       child: CupertinoFormSection.insetGrouped(
-                        backgroundColor: Colors.grey[200] ?? Colors.grey,
+                        backgroundColor: Colors.white,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.secondary,
+                          color: Theme.of(context).colorScheme.surface,
                           borderRadius: BorderRadius.circular(26),
                         ),
-                        header: Text(
-                          'Employee details',
-                          style: TextStyle(
-                            fontFamily: 'sfpro',
+                        // header: Text(
+                        //   'Employee details',
+                        //   style: TextStyle(
+                        //     fontFamily: 'sfpro',
 
-                            color: Theme.of(context).colorScheme.outline,
-                          ),
-                        ),
+                        //     color: Colors.black,
+                        //   ),
+                        // ),
                         children: [
                           CupertinoFormRow(
                             prefix: Text(
@@ -75,7 +78,7 @@ class Firstpage extends StatelessWidget {
                               style: TextStyle(
                                 fontFamily: 'sfpro',
                                 fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.outline,
+                                color: Colors.black,
                               ),
                             ),
                             child: CupertinoTextFormFieldRow(
@@ -93,7 +96,7 @@ class Firstpage extends StatelessWidget {
                               style: TextStyle(
                                 fontFamily: 'sfpro',
                                 fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.outline,
+                                color: Colors.black,
                               ),
                             ),
                             child: CupertinoTextFormFieldRow(
@@ -108,7 +111,23 @@ class Firstpage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 60),
+                    SizedBox(height: 30),
+                    Center(
+                      child: CupertinoButton(
+                        color: Colors.black,
+                        child: Text(
+                          "  Login ",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'sfpro',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        onPressed: () {},
+                      ),
+                    ),
+                    SizedBox(height: 50),
                     Center(
                       child: Text(
                         "If You Don't Have An Account, Please Register",
@@ -120,35 +139,50 @@ class Firstpage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 0),
+
                     Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CupertinoButton(
-                            color: const Color.fromARGB(126, 0, 0, 0),
                             child: Text(
-                              "Branch Register",
+                              "Branch Registration",
                               style: TextStyle(
                                 fontFamily: 'sfpro',
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: Colors.blue,
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const BranchRegistration(),
+                                ),
+                              );
+                            },
                           ),
                           SizedBox(width: 20),
                           CupertinoButton(
-                            color: Color.fromARGB(126, 0, 0, 0),
                             child: Text(
-                              "Person Register",
+                              "User Registration",
                               style: TextStyle(
                                 fontFamily: 'sfpro',
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: Colors.blue,
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const PersonRegistrationPage(),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),

@@ -42,15 +42,20 @@ class _BranchRegistrationState extends State<BranchRegistration> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black, // Change the back button color
+        ),
+      ),
       body: SingleChildScrollView(
         child: Container(
           color: Theme.of(context).colorScheme.surface,
           child: Center(
             child: Column(
               children: [
-                SizedBox(height: 50),
+                SizedBox(height: 1),
                 Text(
-                  "Office Registration",
+                  "Branch Registration",
                   style: TextStyle(
                     fontSize: 50,
                     fontFamily: 'lobstertwo',

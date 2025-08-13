@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:test_code/picker.dart';
 
 class PersonRegistrationPage extends StatefulWidget {
@@ -11,8 +12,6 @@ class PersonRegistrationPage extends StatefulWidget {
 }
 
 class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
-  
-
   //Person data
   final personName = TextEditingController();
   final personId = TextEditingController();
@@ -24,8 +23,6 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
   late DatabaseReference branchReference;
   late DatabaseReference employeeReference;
 
-  
-
   final List<String> jobRoles = [
     'Manager',
     'Assistant Manager',
@@ -35,22 +32,26 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
   @override
   void initState() {
     super.initState();
-   
+
     employeeReference = FirebaseDatabase.instance.ref().child("employees");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black, // Change the back button color
+        ),
+      ),
       body: SingleChildScrollView(
         child: Container(
           color: Theme.of(context).colorScheme.surface,
           child: Center(
             child: Column(
               children: [
-                SizedBox(height: 50),
                 Text(
-                  "Registration",
+                  "User Registration",
                   style: TextStyle(
                     fontSize: 50,
                     fontFamily: 'lobstertwo',
@@ -58,8 +59,18 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                     color: Theme.of(context).colorScheme.outline,
                   ),
                 ),
-                SizedBox(height: 40),
-          
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: SizedBox(
+                    width: 500,
+                    height: 400,
+                    child: Lottie.asset(
+                      'assets/profile.json',
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+
                 //-----------------second container-------------------
                 Container(
                   width: (MediaQuery.of(context).size.width - 100) * 0.82,
@@ -132,7 +143,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                           ),
                           child: CupertinoTextFormFieldRow(
                             cursorColor: Colors.black,
-                            controller:mobileNumber ,
+                            controller: mobileNumber,
                             placeholder: 'Enter branch id',
                             onSaved: (value) {
                               print(value);
@@ -202,13 +213,14 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                   ),
                 ),
                 SizedBox(height: 50),
-             
+
                 CupertinoButton(
+                  color: Colors.black,
                   child: Text(
-                    'register person]',
+                    'Register',
                     style: TextStyle(
                       fontSize: 20,
-                      color: Colors.green,
+                      color: Colors.white,
                       fontFamily: 'sfpro',
                       fontWeight: FontWeight.bold,
                     ),
@@ -241,14 +253,15 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                         "employeePosition": employeePositionController.text,
                         "employeePassword": personPassword.text,
                       };
-                      employeeReference.child(personId.text)
-                          
+                      employeeReference
+                          .child(personId.text)
                           .set(employeeData)
                           .then((_) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  personName.text+' Registration Request Sent Successfully',
+                                  personName.text +
+                                      ' Registration Request Sent Successfully',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 duration: Duration(seconds: 5),
@@ -271,6 +284,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                     }
                   },
                 ),
+                SizedBox(height: 80),
               ],
             ),
           ),
