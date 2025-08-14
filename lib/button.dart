@@ -37,6 +37,8 @@ class _ButtonSelectionDemoState extends State<ButtonSelectionDemo> {
         ),
         SizedBox(height: 15),
         buildColorButton("Rejected", const Color.fromARGB(255, 251, 33, 33)),
+        SizedBox(height: 15),
+        buildColorButton("Logout", const Color.fromARGB(255, 186, 251, 33)),
       ],
     );
   }

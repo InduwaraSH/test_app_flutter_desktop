@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_code/Home.dart';
+import 'package:test_code/firstpage.dart';
 import 'package:test_code/selected_provider.dart';
 
 class alerts extends StatefulWidget {
@@ -51,7 +54,7 @@ class _homeState extends State<alerts> {
 
       SecondaryTextColour = Theme.of(context).colorScheme.onTertiary;
       ;
-    } else {}
+    } else{}
 
     return Container(
       padding: EdgeInsets.all(10),

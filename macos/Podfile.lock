@@ -1,4 +1,6 @@
 PODS:
+  - connectivity_plus (0.0.1):
+    - FlutterMacOS
   - Firebase/Auth (11.15.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 11.15.0)
@@ -75,6 +77,7 @@ PODS:
   - leveldb-library (1.22.6)
 
 DEPENDENCIES:
+  - connectivity_plus (from `Flutter/ephemeral/.symlinks/plugins/connectivity_plus/macos`)
   - firebase_auth (from `Flutter/ephemeral/.symlinks/plugins/firebase_auth/macos`)
   - firebase_core (from `Flutter/ephemeral/.symlinks/plugins/firebase_core/macos`)
   - firebase_database (from `Flutter/ephemeral/.symlinks/plugins/firebase_database/macos`)
@@ -96,6 +99,8 @@ SPEC REPOS:
     - leveldb-library
 
 EXTERNAL SOURCES:
+  connectivity_plus:
+    :path: Flutter/ephemeral/.symlinks/plugins/connectivity_plus/macos
   firebase_auth:
     :path: Flutter/ephemeral/.symlinks/plugins/firebase_auth/macos
   firebase_core:
@@ -106,6 +111,7 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral
 
 SPEC CHECKSUMS:
+  connectivity_plus: 4adf20a405e25b42b9c9f87feff8f4b6fde18a4e
   Firebase: d99ac19b909cd2c548339c2241ecd0d1599ab02e
   firebase_auth: 693f1e1ef2bb11a241d4478e63f1f47676af0538
   firebase_core: 7667f880631ae8ad10e3d6567ab7582fe0682326

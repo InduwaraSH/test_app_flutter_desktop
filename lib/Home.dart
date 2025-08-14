@@ -1,17 +1,19 @@
 import 'dart:math';
 
 import 'package:animated_icon_button/animated_icon_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frosted_glass_effect/frosted_glass_effect.dart';
 import 'package:provider/provider.dart';
 import 'package:test_code/animated_but.dart';
 import 'package:test_code/button.dart';
+import 'package:test_code/firstpage.dart';
 import 'package:test_code/midlle_container_data.dart';
 import 'package:test_code/selected_provider.dart';
 import 'package:test_code/theme.dart';
 import 'package:test_code/theme_provider.dart';
-
 
 import 'theme.dart';
 
@@ -56,6 +58,20 @@ class _HomepgState extends State<Homepg> {
                         SizedBox(height: 40),
                         ButtonSelectionDemo(),
                         SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            FirebaseAuth.instance.signOut().whenComplete(() {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => Firstpage(),
+                                ), // Login page
+                                (route) => false, // remove all routes
+                              );
+                            });
+                          },
+                          child: Text("Logout"),
+                        ),
 
                         SizedBox(height: 20),
                       ],

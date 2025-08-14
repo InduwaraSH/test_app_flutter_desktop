@@ -20,6 +20,7 @@ class _FirstpageState extends State<Firstpage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
+
       body: Row(
         children: [
           Column(
@@ -134,7 +135,11 @@ class _FirstpageState extends State<Firstpage> {
                           ),
                         ),
                         onPressed: () {
-                         Login().signIn('${login_ID.text}@gmail.com', login_password.text);
+                          Login().signIn(
+                            login_ID.text,
+                            login_password.text,
+                            context,
+                          );
                           // Navigator.push(
                           //   context,
                           //   MaterialPageRoute(
