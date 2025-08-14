@@ -2,10 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:test_code/branchRegistration.dart';
+import 'package:test_code/login.dart';
 import 'package:test_code/personregitration.dart';
 
-class Firstpage extends StatelessWidget {
+class Firstpage extends StatefulWidget {
   const Firstpage({super.key});
+
+  @override
+  State<Firstpage> createState() => _FirstpageState();
+}
+
+class _FirstpageState extends State<Firstpage> {
+  final login_ID = TextEditingController();
+  final login_password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +92,7 @@ class Firstpage extends StatelessWidget {
                             ),
                             child: CupertinoTextFormFieldRow(
                               cursorColor: Colors.black,
-                              //controller: personId,
+                              controller: login_ID,
                               placeholder: 'Enter branch id',
                               onSaved: (value) {
                                 print(value);
@@ -101,7 +110,7 @@ class Firstpage extends StatelessWidget {
                             ),
                             child: CupertinoTextFormFieldRow(
                               cursorColor: Colors.black,
-                              //controller: personId,
+                              controller: login_password,
                               placeholder: 'Enter branch id',
                               onSaved: (value) {
                                 print(value);
@@ -124,7 +133,15 @@ class Firstpage extends StatelessWidget {
                             fontSize: 16,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                         Login().signIn('${login_ID.text}@gmail.com', login_password.text);
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => const Home(),
+                          //   ),
+                          // );
+                        },
                       ),
                     ),
                     SizedBox(height: 50),
