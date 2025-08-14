@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:test_code/Home.dart';
+import 'package:test_code/firstpage.dart';
 
 class Login {
   late final credential;
@@ -24,10 +25,11 @@ class Login {
               fontWeight: FontWeight.bold,
             ),
           ),
-          duration: Duration(seconds: 5),
+          duration: Duration(seconds: 3),
           backgroundColor: Colors.grey,
         ),
       );
+
       return;
     } else if (employeeId.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -40,7 +42,7 @@ class Login {
               fontWeight: FontWeight.bold,
             ),
           ),
-          duration: Duration(seconds: 5),
+          duration: Duration(seconds: 3),
           backgroundColor: Colors.red,
         ),
       );
@@ -85,27 +87,27 @@ class Login {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              duration: Duration(seconds: 5),
+              duration: Duration(seconds: 3),
               backgroundColor: Colors.red,
             ),
           );
         }
       } on FirebaseAuthException catch (e) {
         print("FirebaseAuthException: ${e.code}");
-         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                e.code,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'sfpro',
-                  fontWeight: FontWeight.bold,
-                ),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              e.code,
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'sfpro',
+                fontWeight: FontWeight.bold,
               ),
-              duration: Duration(seconds: 5),
-              backgroundColor: Colors.red,
             ),
-          );
+            duration: Duration(seconds: 3),
+            backgroundColor: Colors.red,
+          ),
+        );
         // print("FirebaseAuthException: ${credential.user?.email}");
         if (e.code == 'user-not-found') {
           print('No user found for that email.');
@@ -119,7 +121,7 @@ class Login {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              duration: Duration(seconds: 5),
+              duration: Duration(seconds: 3),
               backgroundColor: Colors.red,
             ),
           );
@@ -135,7 +137,7 @@ class Login {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              duration: Duration(seconds: 5),
+              duration: Duration(seconds: 3),
               backgroundColor: Colors.red,
             ),
           );
@@ -143,19 +145,19 @@ class Login {
       } catch (e) {
         print("Unexpected error: $e");
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                "Unexpected error: $e",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'sfpro',
-                  fontWeight: FontWeight.bold,
-                ),
+          SnackBar(
+            content: Text(
+              "Unexpected error: $e",
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'sfpro',
+                fontWeight: FontWeight.bold,
               ),
-              duration: Duration(seconds: 5),
-              backgroundColor: Colors.red,
             ),
-          );
+            duration: Duration(seconds: 3),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }

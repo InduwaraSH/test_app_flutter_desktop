@@ -16,6 +16,9 @@ class _FirstpageState extends State<Firstpage> {
   final login_ID = TextEditingController();
   final login_password = TextEditingController();
 
+  bool isVisible_button = true;
+  bool isVisible_loading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,30 +126,79 @@ class _FirstpageState extends State<Firstpage> {
                     ),
                     SizedBox(height: 30),
                     Center(
-                      child: CupertinoButton(
-                        color: Colors.black,
-                        child: Text(
-                          "  Login ",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'sfpro',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                      child: Visibility(
+                        visible: isVisible_loading,
+                        child: Center(
+                          child: CupertinoActivityIndicator(
+                            animating: isVisible_loading,
+                            radius: 13,
                           ),
                         ),
-                        onPressed: () {
-                          Login().signIn(
-                            login_ID.text,
-                            login_password.text,
-                            context,
-                          );
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const Home(),
-                          //   ),
-                          // );
-                        },
+                      ),
+                    ),
+                    Center(
+                      child: AnimatedOpacity(
+                        duration: Duration(milliseconds: 500),
+                        opacity: isVisible_button ? 1.0 : 0.0,
+                        child: Visibility(
+                          visible: isVisible_button,
+                          child: CupertinoButton(
+                            color: Colors.black,
+                            child: Text(
+                              "  Login ",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'sfpro',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            onPressed: () {
+                              if (login_ID.text.isEmpty ||
+                                  login_password.text.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Please fill in all fields.',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'sfpro',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    duration: Duration(seconds: 5),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              } else {
+                                setState(() {
+                                  isVisible_button = false;
+                                  isVisible_loading = true;
+                                });
+                                Login()
+                                    .signIn(
+                                      login_ID.text,
+                                      login_password.text,
+                                      context,
+                                    )
+                                    .whenComplete(() {
+                                      setState(() {
+                                        isVisible_button = true;
+                                        isVisible_loading = false;
+                                      });
+                                    });
+                              }
+
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => const Home(),
+                              //   ),
+                              // );
+                            },
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 50),
