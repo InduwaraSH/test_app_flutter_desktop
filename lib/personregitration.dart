@@ -19,6 +19,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
   final personPasswordConfirm = TextEditingController();
   final mobileNumber = TextEditingController();
   final employeePositionController = TextEditingController();
+  final locationController = TextEditingController();
 
   late DatabaseReference branchReference;
   late DatabaseReference employeeReference;
@@ -27,6 +28,17 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
     'Manager',
     'Assistant Manager',
     'Area Manager',
+  ];
+
+  final List<String> myTowns = [
+    'Maharagama',
+    'Embilipitiya',
+    'Matara',
+    'Galle',
+    'Colombo',
+    'Trinco',
+    'Walasmulla',
+    'Negombo',
   ];
 
   @override
@@ -153,7 +165,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
 
                         CupertinoFormRow(
                           prefix: Text(
-                            'Employee Position',
+                            'Working office',
                             style: TextStyle(
                               fontFamily: 'sfpro',
 
@@ -167,6 +179,27 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                               Picker(
                                 controller: employeePositionController,
                                 townNames: jobRoles,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        CupertinoFormRow(
+                          prefix: Text(
+                            'Employee Position',
+                            style: TextStyle(
+                              fontFamily: 'sfpro',
+
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(width: 30),
+                              Picker(
+                                controller: locationController,
+                                townNames: myTowns,
                               ),
                             ],
                           ),
@@ -230,7 +263,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                         personName.text.isEmpty ||
                         mobileNumber.text.isEmpty ||
                         mobileNumber.text.length != 10 ||
-                        employeePositionController.text.isEmpty ||
+                        employeePositionController.text.isEmpty || locationController.text.isEmpty ||
                         personPassword.text.isEmpty ||
                         personPasswordConfirm.text.isEmpty ||
                         personPassword.text != personPasswordConfirm.text) {
@@ -251,6 +284,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                         "employeeName": personName.text,
                         "employeeMobile": mobileNumber.text,
                         "employeePosition": employeePositionController.text,
+                        "employeeLocation": locationController.text,
                         "employeePassword": personPassword.text,
                       };
                       employeeReference
