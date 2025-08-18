@@ -14,12 +14,22 @@ class Button_ARM extends StatefulWidget {
 class _Button_ARMState extends State<Button_ARM> {
   String? activeButton;
 
+  @override
+  void initState() {
+    super.initState();
+    activeButton = "Recived";
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<SelectionProvider>(
+        context,
+        listen: false,
+      ).setSelected(activeButton!);
+    });
+  }
+
   void setActive(String key) {
     setState(() {
       activeButton = key;
     });
-
-    String result = getSelectedValue();
     print("Pressed button: $key");
     Provider.of<SelectionProvider>(context, listen: false).setSelected(key);
   }
@@ -29,14 +39,13 @@ class _Button_ARMState extends State<Button_ARM> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        buildColorButton("CREATE", Theme.of(context).colorScheme.onPrimary),
+        buildColorButton("Recived", Theme.of(context).colorScheme.onPrimary),
         SizedBox(height: 15),
         buildColorButton(
-          "SEND",
+          "Authorized",
           Theme.of(context).colorScheme.onSecondary,
         ),
         SizedBox(height: 15),
-       
       ],
     );
   }

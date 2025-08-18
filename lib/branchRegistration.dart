@@ -21,8 +21,8 @@ class _BranchRegistrationState extends State<BranchRegistration> {
   final locationController = TextEditingController();
 
   late String employeePosition;
+  late bool areaOfficeLocationVisibility;
 
-  
   //Person data
 
   late DatabaseReference branchReference;
@@ -43,6 +43,12 @@ class _BranchRegistrationState extends State<BranchRegistration> {
     super.initState();
     branchReference = FirebaseDatabase.instance.ref().child("branches");
     employeePosition = widget.employeePosition;
+    
+    if (employeePosition == 'Regional Office (RO)') {
+      areaOfficeLocationVisibility = false;
+    } else if (employeePosition == 'Area Regional Office (ARO)') {
+      areaOfficeLocationVisibility = true;
+    }
   }
 
   @override
@@ -142,6 +148,29 @@ class _BranchRegistrationState extends State<BranchRegistration> {
                             ],
                           ),
                         ),
+                        Visibility(
+                          visible: areaOfficeLocationVisibility,
+                          child: CupertinoFormRow(
+                            prefix: Text(
+                              'RO Location',
+                              style: TextStyle(
+                                fontFamily: 'sfpro',
+
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.outline,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                SizedBox(width: 30),
+                                Picker(
+                                  controller: locationController,
+                                  townNames: myTowns,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         CupertinoFormRow(
                           prefix: Text(
                             'Branch Password',
@@ -212,7 +241,7 @@ class _BranchRegistrationState extends State<BranchRegistration> {
                         "branchLocation": locationController.text,
                       };
                       branchReference
-                          .push()
+                          .child(branchId.text)
                           .set(branchData)
                           .then((_) {
                             ScaffoldMessenger.of(context).showSnackBar(

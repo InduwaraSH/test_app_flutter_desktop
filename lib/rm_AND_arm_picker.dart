@@ -122,7 +122,7 @@ class _RmAndArmPickerState extends State<RmAndArmPicker> {
             },
             color: Colors.black,
             child: Text(
-              "Submit",
+              "Next",
               style: TextStyle(fontFamily: 'sfpro', color: Colors.white),
             ),
           ),
