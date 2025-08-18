@@ -4,6 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:test_code/branchRegistration.dart';
 import 'package:test_code/login.dart';
 import 'package:test_code/personregitration.dart';
+import 'package:test_code/rm_AND_arm_picker.dart';
 
 class Firstpage extends StatefulWidget {
   const Firstpage({super.key});
@@ -232,8 +233,7 @@ class _FirstpageState extends State<Firstpage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const BranchRegistration(),
+                                  builder: (context) => const RmAndArmPicker(),
                                 ),
                               );
                             },

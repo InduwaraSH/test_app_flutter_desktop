@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:test_code/Home.dart';
+import 'package:test_code/Home_ARM.dart';
 import 'package:test_code/firstpage.dart';
 
 class Login {
@@ -13,6 +14,7 @@ class Login {
     BuildContext context,
   ) async {
     bool result = await InternetConnection().hasInternetAccess;
+
 
     if (result == false) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -68,7 +70,7 @@ class Login {
           } else if (snapshot.value == 'Assistant Manager') {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Homepg()),
+              MaterialPageRoute(builder: (context) => Home_ARM()),
             );
           } else if (snapshot.value == 'Area Manager') {
             Navigator.push(

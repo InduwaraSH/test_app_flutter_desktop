@@ -5,7 +5,9 @@ import 'package:lottie/lottie.dart';
 import 'package:test_code/picker.dart';
 
 class BranchRegistration extends StatefulWidget {
-  const BranchRegistration({super.key});
+  final String employeePosition;
+
+  const BranchRegistration({super.key, required this.employeePosition});
 
   @override
   State<BranchRegistration> createState() => _BranchRegistrationState();
@@ -18,6 +20,9 @@ class _BranchRegistrationState extends State<BranchRegistration> {
   final branchPasswordConfirm = TextEditingController();
   final locationController = TextEditingController();
 
+  late String employeePosition;
+
+  
   //Person data
 
   late DatabaseReference branchReference;
@@ -37,6 +42,7 @@ class _BranchRegistrationState extends State<BranchRegistration> {
   void initState() {
     super.initState();
     branchReference = FirebaseDatabase.instance.ref().child("branches");
+    employeePosition = widget.employeePosition;
   }
 
   @override
@@ -236,7 +242,7 @@ class _BranchRegistrationState extends State<BranchRegistration> {
                     }
                   },
                   child: Text(
-                    'Register',
+                    employeePosition,
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,

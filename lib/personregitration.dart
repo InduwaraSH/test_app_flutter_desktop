@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:lottie/lottie.dart';
 import 'package:test_code/picker.dart';
 
@@ -258,63 +259,79 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  onPressed: () {
-                    if (personId.text.isEmpty ||
-                        personName.text.isEmpty ||
-                        mobileNumber.text.isEmpty ||
-                        mobileNumber.text.length != 10 ||
-                        employeePositionController.text.isEmpty || locationController.text.isEmpty ||
-                        personPassword.text.isEmpty ||
-                        personPasswordConfirm.text.isEmpty ||
-                        personPassword.text != personPasswordConfirm.text) {
+                  onPressed: () async {
+                    bool result = await InternetConnection().hasInternetAccess;
+
+                    if (result == false) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'Please fill all fields correctly',
+                            'No internet connection',
                             style: TextStyle(color: Colors.white),
                           ),
-                          duration: Duration(seconds: 5),
-                          backgroundColor: Colors.red,
+                          duration: Duration(seconds: 3),
+                          backgroundColor: Colors.grey,
                         ),
                       );
                       return;
                     } else {
-                      Map<String, String> employeeData = {
-                        "employeeId": personId.text,
-                        "employeeName": personName.text,
-                        "employeeMobile": mobileNumber.text,
-                        "employeePosition": employeePositionController.text,
-                        "employeeLocation": locationController.text,
-                        "employeePassword": personPassword.text,
-                      };
-                      employeeReference
-                          .child(personId.text)
-                          .set(employeeData)
-                          .then((_) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  personName.text +
-                                      ' Registration Request Sent Successfully',
-                                  style: TextStyle(color: Colors.white),
+                      if (personId.text.isEmpty ||
+                          personName.text.isEmpty ||
+                          mobileNumber.text.isEmpty ||
+                          mobileNumber.text.length != 10 ||
+                          employeePositionController.text.isEmpty ||
+                          locationController.text.isEmpty ||
+                          personPassword.text.isEmpty ||
+                          personPasswordConfirm.text.isEmpty ||
+                          personPassword.text != personPasswordConfirm.text) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Please fill all fields correctly',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            duration: Duration(seconds: 5),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        return;
+                      } else {
+                        Map<String, String> employeeData = {
+                          "employeeId": personId.text,
+                          "employeeName": personName.text,
+                          "employeeMobile": mobileNumber.text,
+                          "employeePosition": employeePositionController.text,
+                          "employeeLocation": locationController.text,
+                          "employeePassword": personPassword.text,
+                        };
+                        employeeReference
+                            .child(personId.text)
+                            .set(employeeData)
+                            .then((_) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    '${personName.text} Registration Request Sent Successfully',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  duration: Duration(seconds: 5),
+                                  backgroundColor: Colors.green,
                                 ),
-                                duration: Duration(seconds: 5),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                          })
-                          .catchError((error) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  "Failed to save manager data: $error",
-                                  style: TextStyle(color: Colors.white),
+                              );
+                            })
+                            .catchError((error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "Failed to save manager data: $error",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  duration: Duration(seconds: 5),
+                                  backgroundColor: Colors.redAccent,
                                 ),
-                                duration: Duration(seconds: 5),
-                                backgroundColor: Colors.redAccent,
-                              ),
-                            );
-                          });
+                              );
+                            });
+                      }
                     }
                   },
                 ),
