@@ -114,7 +114,8 @@ class _RmAndArmPickerState extends State<RmAndArmPicker> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => BranchRegistration(
-                      employeePosition: employeePositionController.text,
+                      branchType: employeePositionController.text,
+                     
                     ),
                   ),
                 );

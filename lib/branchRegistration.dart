@@ -5,9 +5,9 @@ import 'package:lottie/lottie.dart';
 import 'package:test_code/picker.dart';
 
 class BranchRegistration extends StatefulWidget {
-  final String employeePosition;
+  final String branchType;
 
-  const BranchRegistration({super.key, required this.employeePosition});
+  const BranchRegistration({super.key, required this.branchType});
 
   @override
   State<BranchRegistration> createState() => _BranchRegistrationState();
@@ -19,8 +19,9 @@ class _BranchRegistrationState extends State<BranchRegistration> {
   final branchPassword = TextEditingController();
   final branchPasswordConfirm = TextEditingController();
   final locationController = TextEditingController();
+  final relevantROBranch = TextEditingController();
 
-  late String employeePosition;
+  late String branchType;
   late bool areaOfficeLocationVisibility;
 
   //Person data
@@ -41,12 +42,12 @@ class _BranchRegistrationState extends State<BranchRegistration> {
   @override
   void initState() {
     super.initState();
-    branchReference = FirebaseDatabase.instance.ref().child("branches");
-    employeePosition = widget.employeePosition;
+    branchReference = FirebaseDatabase.instance.ref().child("RO_branches");
+    branchType = widget.branchType;
     
-    if (employeePosition == 'Regional Office (RO)') {
+    if (branchType == 'Regional Office (RO)') {
       areaOfficeLocationVisibility = false;
-    } else if (employeePosition == 'Area Regional Office (ARO)') {
+    } else if (branchType == 'Area Regional Office (ARO)') {
       areaOfficeLocationVisibility = true;
     }
   }
@@ -164,7 +165,7 @@ class _BranchRegistrationState extends State<BranchRegistration> {
                               children: [
                                 SizedBox(width: 30),
                                 Picker(
-                                  controller: locationController,
+                                  controller: relevantROBranch,
                                   townNames: myTowns,
                                 ),
                               ],
@@ -212,7 +213,7 @@ class _BranchRegistrationState extends State<BranchRegistration> {
                   ),
                 ),
 
-                //-----------------second container-------------------
+                
                 SizedBox(height: 50),
                 CupertinoButton(
                   color: CupertinoColors.black,
@@ -235,7 +236,10 @@ class _BranchRegistrationState extends State<BranchRegistration> {
                       );
                       return;
                     } else {
-                      Map<String, String> branchData = {
+                      
+                      if(branchType == 'Regional Office (RO)') {
+                        branchReference = FirebaseDatabase.instance.ref().child("RM_branches");
+                        Map<String, String> branchData = {
                         "branchId": branchId.text,
                         "branchPassword": branchPassword.text,
                         "branchLocation": locationController.text,
@@ -247,8 +251,7 @@ class _BranchRegistrationState extends State<BranchRegistration> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  'Registration Successful ' +
-                                      locationController.text,
+                                  'Registration Successful ${locationController.text}',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 duration: Duration(seconds: 5),
@@ -268,10 +271,46 @@ class _BranchRegistrationState extends State<BranchRegistration> {
                               ),
                             );
                           });
+                      } else if(branchType == 'Area Regional Office (ARO)') {
+                       branchReference = FirebaseDatabase.instance.ref().child("ARM_branches");
+                        Map<String, String> branchData = {
+                        "branchId": branchId.text,
+                        "Relevent RO Branch":relevantROBranch.text,
+                        "branchLocation": locationController.text,
+                      };
+                      branchReference
+                          .child(branchId.text)
+                          .set(branchData)
+                          .then((_) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Registration Successful ${locationController.text}',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                duration: Duration(seconds: 5),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          })
+                          .catchError((error) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Failed to save branch data: $error",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                duration: Duration(seconds: 5),
+                                backgroundColor: Colors.redAccent,
+                              ),
+                            );
+                          });
+                      }
+                      
                     }
                   },
                   child: Text(
-                    employeePosition,
+                    branchType,
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,

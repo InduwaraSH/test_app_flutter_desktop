@@ -303,6 +303,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                           "employeePosition": employeePositionController.text,
                           "employeeLocation": locationController.text,
                           "employeePassword": personPassword.text,
+                         
                         };
                         employeeReference
                             .child(personId.text)
