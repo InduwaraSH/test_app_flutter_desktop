@@ -25,11 +25,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
   late DatabaseReference branchReference;
   late DatabaseReference employeeReference;
 
-  final List<String> jobRoles = [
-    'Manager',
-    'Assistant Manager',
-    'Area Manager',
-  ];
+  final List<String> jobRoles = ['RM', 'ARM', 'EMP'];
 
   final List<String> myTowns = [
     'Maharagama',
@@ -120,7 +116,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                           child: CupertinoTextFormFieldRow(
                             cursorColor: Colors.black,
                             controller: personId,
-                            placeholder: 'Enter branch id',
+                            placeholder: 'Enter Employee Id',
                             onSaved: (value) {
                               print(value);
                             },
@@ -138,7 +134,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                           child: CupertinoTextFormFieldRow(
                             cursorColor: Colors.black,
                             controller: personName,
-                            placeholder: 'Enter branch id',
+                            placeholder: 'Enter Employee Name',
                             onSaved: (value) {
                               print(value);
                             },
@@ -157,7 +153,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                           child: CupertinoTextFormFieldRow(
                             cursorColor: Colors.black,
                             controller: mobileNumber,
-                            placeholder: 'Enter branch id',
+                            placeholder: 'Enter Personal Mobile Number',
                             onSaved: (value) {
                               print(value);
                             },
@@ -166,7 +162,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
 
                         CupertinoFormRow(
                           prefix: Text(
-                            'Working office',
+                            'Office or Job type',
                             style: TextStyle(
                               fontFamily: 'sfpro',
 
@@ -187,7 +183,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
 
                         CupertinoFormRow(
                           prefix: Text(
-                            'Employee Position',
+                            'Office Location',
                             style: TextStyle(
                               fontFamily: 'sfpro',
 
@@ -208,7 +204,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
 
                         CupertinoFormRow(
                           prefix: Text(
-                            'Manager Password',
+                            'Password',
                             style: TextStyle(
                               fontFamily: 'sfpro',
                               fontWeight: FontWeight.bold,
@@ -218,7 +214,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                           child: CupertinoTextFormFieldRow(
                             cursorColor: Colors.black,
                             controller: personPassword,
-                            placeholder: 'Enter manager password',
+                            placeholder: 'Enter  password',
                             onSaved: (value) {
                               print(value);
                             },
@@ -226,7 +222,7 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                         ),
                         CupertinoFormRow(
                           prefix: Text(
-                            'Manager Password',
+                            'Password',
                             style: TextStyle(
                               fontFamily: 'sfpro',
                               fontWeight: FontWeight.bold,
@@ -303,7 +299,6 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
                           "employeePosition": employeePositionController.text,
                           "employeeLocation": locationController.text,
                           "employeePassword": personPassword.text,
-                         
                         };
                         employeeReference
                             .child(personId.text)

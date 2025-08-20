@@ -18,13 +18,25 @@ import 'package:test_code/theme_provider.dart';
 import 'theme.dart';
 
 class Homepg extends StatefulWidget {
-  Homepg({super.key});
+  final String location;
+  final String position;
+  const Homepg({super.key, required this.location, required this.position});
 
   @override
   State<Homepg> createState() => _HomepgState();
 }
 
 class _HomepgState extends State<Homepg> {
+  late String new_location;
+  late String new_position;
+
+  @override
+  void initState() {
+    super.initState();
+    new_location = widget.location;
+    new_position = widget.position;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +93,7 @@ class _HomepgState extends State<Homepg> {
                 ],
               ),
               SizedBox(width: 30),
-              alerts(),
+              alerts(location: new_location, position: new_position),
               SizedBox(width: 30),
               Column(
                 children: [

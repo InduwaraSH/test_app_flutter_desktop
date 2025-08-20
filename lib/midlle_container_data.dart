@@ -9,14 +9,27 @@ import 'package:test_code/firstpage.dart';
 import 'package:test_code/selected_provider.dart';
 
 class alerts extends StatefulWidget {
-  const alerts({super.key});
+  final String location;
+  final String position;
+  const alerts({super.key, required this.location, required this.position});
 
   @override
   State<alerts> createState() => _homeState();
 }
 
 class _homeState extends State<alerts> {
-  Query dbref_alerts = FirebaseDatabase.instance.ref().child("tree details");
+  late String location;
+  late String position;
+
+  @override
+  void initState() {
+    super.initState();
+    location = widget.location;
+    position = widget.position;
+  }
+  late Query dbref_alerts = FirebaseDatabase.instance.ref().child(position).child(location);
+
+  
 
   Widget listItem({required Map Alerts}) {
     final String ageOfTree = Alerts['Age of Tree'];
@@ -29,6 +42,8 @@ class _homeState extends State<alerts> {
     Color colour_picked = Colors.pinkAccent;
     Color PrimaryTextColour = Colors.white;
     Color SecondaryTextColour = Colors.white;
+
+    
 
     if (Provider.of<SelectionProvider>(context).selected == "Recived") {
       colour_picked = Theme.of(context).colorScheme.onSecondaryContainer;
@@ -162,6 +177,7 @@ class _homeState extends State<alerts> {
               borderRadius: BorderRadius.circular(26),
             ),
             child: FirebaseAnimatedList(
+              
               // Let outer scroll handle
               reverse: false,
               query: dbref_alerts,

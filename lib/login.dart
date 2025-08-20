@@ -15,7 +15,6 @@ class Login {
   ) async {
     bool result = await InternetConnection().hasInternetAccess;
 
-
     if (result == false) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -55,27 +54,39 @@ class Login {
               email: '${employeeId.trim()}@gmail.com',
               password: password.trim(),
             );
-        Query dbref = FirebaseDatabase.instance
+        DatabaseReference dbref = FirebaseDatabase.instance
             .ref()
             .child("employee_data_saved")
-            .child(employeeId)
-            .child('employeePosition');
-        final snapshot = await dbref.get();
+            .child(employeeId);
+
+        final snapshot = await dbref.child('employeePosition').get();
+
+        final snapshot_office = await dbref.child('employeeOffice').get();
         if (snapshot.exists) {
-          if (snapshot.value == 'Manager') {
+          if (snapshot.value == 'RM') {
+            String position = "RM_branch_data_saved";
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Homepg()),
+              MaterialPageRoute(
+                builder: (context) =>
+                    Homepg(location: snapshot_office.value.toString(), position: position),
+              ),
             );
-          } else if (snapshot.value == 'Assistant Manager') {
+          } else if (snapshot.value == 'ARM') {
+            String position = "ARM_branch_data_saved";
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Home_ARM()),
+              MaterialPageRoute(
+                builder: (context) =>
+                    Home_ARM(location: snapshot_office.value.toString(), position: position),
+              ),
             );
-          } else if (snapshot.value == 'Area Manager') {
+          } else if (snapshot.value == 'EMP') {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Homepg()),
+              MaterialPageRoute(
+                builder: (context) => Homepg(location: snapshot_office.value.toString(), position: snapshot.value.toString()),
+              ),
             );
           }
         } else {
