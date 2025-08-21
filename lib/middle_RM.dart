@@ -21,7 +21,7 @@ class middle_RM extends StatefulWidget {
 class _homeState extends State<middle_RM> {
   late String location;
   late String position;
-  String? selectedBranch; // ✅ store which branch is selected
+  String? selectedBranch;
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class _homeState extends State<middle_RM> {
         ).setSelected(branchName);
       },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 400), // ⏱ animation speed
+        duration: const Duration(milliseconds: 400), 
         curve: Curves.easeInOut,
         padding: const EdgeInsets.all(12),
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),

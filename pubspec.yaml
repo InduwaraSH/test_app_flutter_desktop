@@ -91,6 +91,10 @@ flutter:
     - family: lobstertwo
       fonts:
         - asset: fonts/lobstertwo.ttf
+
+    - family: DMSerif
+      fonts:
+        - asset: fonts/DMSerif.ttf
         
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic

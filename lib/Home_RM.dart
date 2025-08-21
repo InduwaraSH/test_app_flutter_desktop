@@ -109,7 +109,7 @@ class _Home_RMState extends State<Home_RM> {
                       color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(26),
                     ),
-                    child: form_RM(),
+                    child: form_RM(location: new_location, position: new_position),
                   ),
                 ],
               ),
