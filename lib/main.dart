@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_code/ARM_SelectProvider.dart';
 import 'package:test_code/Home.dart';
 import 'package:test_code/constant.dart';
 import 'package:test_code/firebase_options.dart';
@@ -18,6 +19,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => SelectionProvider()),
+        ChangeNotifierProvider(create: (context) => ARM_Selection_provider()),
       ],
       child: const MyApp(),
     ),

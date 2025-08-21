@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:test_code/Home.dart';
 import 'package:test_code/Home_ARM.dart';
+import 'package:test_code/Home_RM.dart';
 import 'package:test_code/firstpage.dart';
 
 class Login {
@@ -69,7 +70,7 @@ class Login {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    Homepg(location: snapshot_office.value.toString(), position: position),
+                    Home_RM(location: snapshot_office.value.toString(), position: position),
               ),
             );
           } else if (snapshot.value == 'ARM') {
@@ -82,10 +83,11 @@ class Login {
               ),
             );
           } else if (snapshot.value == 'EMP') {
+            String position = "EMP_branch_data_saved";
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Homepg(location: snapshot_office.value.toString(), position: snapshot.value.toString()),
+                builder: (context) => Homepg(location: snapshot_office.value.toString(), position: position),
               ),
             );
           }
