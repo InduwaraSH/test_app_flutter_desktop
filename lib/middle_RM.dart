@@ -22,12 +22,27 @@ class _homeState extends State<middle_RM> {
   late String location;
   late String position;
   String? selectedBranch;
+  String branchName = "Galle";
 
   @override
   void initState() {
     super.initState();
     location = widget.location;
     position = widget.position;
+
+    selectedBranch = branchName;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<SelectionProvider>(
+        context,
+        listen: false,
+      ).setSelected(branchName);
+    });
+
+    Provider.of<ARM_Selection_provider>(
+          context,
+          listen: false,
+        ).setSelected(branchName);
+
   }
 
   late Query dbrefRM_related_ARM_Offices = FirebaseDatabase.instance
@@ -54,9 +69,15 @@ class _homeState extends State<middle_RM> {
           context,
           listen: false,
         ).setSelected(branchName);
+
+        Provider.of<ARM_Selection_provider>(
+          context,
+          listen: false,
+        ).setType("ARM");
       },
+
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 400), 
+        duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
         padding: const EdgeInsets.all(12),
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),

@@ -16,31 +16,39 @@ class form_RM extends StatefulWidget {
 }
 
 class _form_RMState extends State<form_RM> {
-  final TreeName = TextEditingController();
-  final District = TextEditingController();
-  final CircumferenceOfTree = TextEditingController();
-  final HeightOfTree = TextEditingController();
-  final AgeOfTree = TextEditingController();
-  final DangerLevel = TextEditingController();
+  final SerialNumberController = TextEditingController();
+  final PlaceOfCoupeController = TextEditingController();
+  final LetterNoController = TextEditingController();
+  final DateinforemedController = TextEditingController();
+  
+    String? savedValue;
 
-  late DatabaseReference databaseReference;
+
+  
   // default
   late String location;
   late String position;
-
+  
   @override
   void initState() {
     super.initState();
     location = widget.location;
     position = widget.position;
-    databaseReference = FirebaseDatabase.instance
-        .ref()
-        .child("ARM_branch_data_saved")
-        .child("Matara");
+
+    final provider = Provider.of<ARM_Selection_provider>(context, listen: false);
+    savedValue = provider.selected;
+
+    // listen for changes
+    provider.addListener(() {
+      setState(() {
+        savedValue = provider.selected;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -51,12 +59,21 @@ class _form_RMState extends State<form_RM> {
             SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: [SendButton_animated(), SizedBox(width: 10)],
+              children: [
+                SendButton_animated(
+                  SerialNumberController,
+                  PlaceOfCoupeController,
+                  LetterNoController,
+                  DateinforemedController,
+                  position
+                ),
+                SizedBox(width: 10),
+              ],
             ),
             SizedBox(height: 30),
             Center(
               child: Text(
-                "Enumeration And Wayside Deport Register For Donated Timber",
+                "Enumeration And Wayside Deport Register For Donated Timber $savedValue .",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
@@ -119,7 +136,9 @@ class _form_RMState extends State<form_RM> {
                 children: <Widget>[
                   CupertinoTextFormFieldRow(
                     prefix: Text(
-                      'Serial Number   : ',
+                      Provider.of<ARM_Selection_provider>(
+                        context,
+                      ).selected.toString(),
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'sfpro',
@@ -127,6 +146,7 @@ class _form_RMState extends State<form_RM> {
                       ),
                     ),
                     placeholder: 'Enter text',
+                    controller: SerialNumberController,
                     cursorColor: Colors.black,
                   ),
                   CupertinoTextFormFieldRow(
@@ -151,6 +171,7 @@ class _form_RMState extends State<form_RM> {
                       ),
                     ),
                     placeholder: 'Enter text',
+                    controller: LetterNoController,
                     cursorColor: Colors.black,
                   ),
                   CupertinoTextFormFieldRow(
@@ -168,8 +189,12 @@ class _form_RMState extends State<form_RM> {
                           initialDate: DateTime.now(),
                           onDateChanged: (date) {
                             print("Selected Date: $date");
+                            setState(() {
+                              DateinforemedController.text = date.toString();
+                            });
                           },
                         ),
+                        CupertinoButton(child: Text("Select Date"), onPressed: () {})
                       ],
                     ),
                   ),
@@ -177,41 +202,6 @@ class _form_RMState extends State<form_RM> {
               ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Map<String, String> ticketdata = {
-                  'Tree Name': TreeName.text,
-                  'District': District.text,
-                  'Circumference of Tree': CircumferenceOfTree.text,
-                  'Height of Tree': HeightOfTree.text,
-                  'Age of Tree': AgeOfTree.text,
-                  'Danger Level': DangerLevel.text,
-                };
-                databaseReference
-                    .push()
-                    .set(ticketdata)
-                    .then((_) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Data Updated Successfully')),
-                      );
-                    })
-                    .catchError((error) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Failed to update data: $error'),
-                        ),
-                      );
-                    });
-              },
-              child: Text(
-                Provider.of<ARM_Selection_provider>(
-                      context,
-                    ).selected.toString() ??
-                    "Select Branch",
-
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
           ],
         ),
       ),
