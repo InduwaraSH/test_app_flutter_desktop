@@ -10,9 +10,11 @@ import 'package:provider/provider.dart';
 import 'package:test_code/animated_but.dart';
 import 'package:test_code/button.dart';
 import 'package:test_code/button_RM.dart';
+import 'package:test_code/detail_panel.dart';
 import 'package:test_code/firstpage.dart';
 import 'package:test_code/form_RM.dart';
 import 'package:test_code/middle_RM.dart';
+import 'package:test_code/middle_RM_Create.dart';
 import 'package:test_code/midlle_container_data.dart';
 import 'package:test_code/selected_provider.dart';
 import 'package:test_code/theme.dart';
@@ -97,7 +99,9 @@ class _Home_RMState extends State<Home_RM> {
                 ],
               ),
               SizedBox(width: 30),
-              middle_RM(location: new_location, position: new_position),
+
+              RM_Middle(location: new_location, position: new_position),
+              //middle_RM(location: new_location, position: new_position),
               SizedBox(width: 30),
               Column(
                 children: [
@@ -109,7 +113,10 @@ class _Home_RMState extends State<Home_RM> {
                       color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(26),
                     ),
-                    child: form_RM(location: new_location, position: new_position),
+                    child: DetailPanel(
+                      location: new_location,
+                      position: new_position,
+                    ),
                   ),
                 ],
               ),

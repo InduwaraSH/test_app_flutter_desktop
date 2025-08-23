@@ -22,6 +22,9 @@ class _SimpleDatePickerState extends State<SimpleDatePicker> {
   void initState() {
     super.initState();
     _selectedDate = widget.initialDate;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onDateChanged(_selectedDate);
+    });
   }
 
   void _showDatePickerDialog() {

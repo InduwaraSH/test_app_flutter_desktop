@@ -20,22 +20,23 @@ class _form_RMState extends State<form_RM> {
   final PlaceOfCoupeController = TextEditingController();
   final LetterNoController = TextEditingController();
   final DateinforemedController = TextEditingController();
-  
-    String? savedValue;
 
+  String? savedValue;
 
-  
   // default
   late String location;
   late String position;
-  
+
   @override
   void initState() {
     super.initState();
     location = widget.location;
     position = widget.position;
 
-    final provider = Provider.of<ARM_Selection_provider>(context, listen: false);
+    final provider = Provider.of<ARM_Selection_provider>(
+      context,
+      listen: false,
+    );
     savedValue = provider.selected;
 
     // listen for changes
@@ -48,7 +49,6 @@ class _form_RMState extends State<form_RM> {
 
   @override
   Widget build(BuildContext context) {
-    
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -65,7 +65,7 @@ class _form_RMState extends State<form_RM> {
                   PlaceOfCoupeController,
                   LetterNoController,
                   DateinforemedController,
-                  position
+                  position,
                 ),
                 SizedBox(width: 10),
               ],
@@ -136,9 +136,7 @@ class _form_RMState extends State<form_RM> {
                 children: <Widget>[
                   CupertinoTextFormFieldRow(
                     prefix: Text(
-                      Provider.of<ARM_Selection_provider>(
-                        context,
-                      ).selected.toString(),
+                      "Serial Number.  : ",
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'sfpro',
@@ -158,6 +156,7 @@ class _form_RMState extends State<form_RM> {
                         fontFamily: 'sfpro',
                       ),
                     ),
+                    controller: PlaceOfCoupeController,
                     placeholder: 'Enter text',
                     cursorColor: Colors.black,
                   ),
@@ -194,7 +193,10 @@ class _form_RMState extends State<form_RM> {
                             });
                           },
                         ),
-                        CupertinoButton(child: Text("Select Date"), onPressed: () {})
+                        CupertinoButton(
+                          child: Text("Select Date"),
+                          onPressed: () {},
+                        ),
                       ],
                     ),
                   ),

@@ -55,7 +55,6 @@ class _SendButton_animatedState extends State<SendButton_animated> {
       });
     });
     print(savedValue.toString());
-    
   }
 
   @override
@@ -63,46 +62,62 @@ class _SendButton_animatedState extends State<SendButton_animated> {
     return AnimatedIconButton(
       size: 20,
       onPressed: () {
-        
-        Map<String, String> reqData = {
-          'Serial Number': SerialNumberController.text,
-          'placeOfCoupe': PlaceOfCoupeController.text,
-          'LetterNo': LetterNoController.text,
-          'DateInformed': DateinforemedController.text,
-        };
-        FirebaseDatabase.instance
-        .ref()
-        .child("ARM_branch_data_saved")
-        .child(savedValue.toString())
-        .child("Recived")
-        .push()
-        .set(reqData)
-        .then((_) {
+        if (SerialNumberController.text.isEmpty ||
+            PlaceOfCoupeController.text.isEmpty ||
+            LetterNoController.text.isEmpty ||
+            DateinforemedController.text.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-                  content: Text(
-                    savedValue.toString(),
-                    style: TextStyle(color: Colors.white),
+              content: Text(
+                'Please fill in all fields',
+                style: TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return;
+        } else {
+          Map<String, String> reqData = {
+            'Serial Number': SerialNumberController.text,
+            'placeOfCoupe': PlaceOfCoupeController.text,
+            'LetterNo': LetterNoController.text,
+            'DateInformed': DateinforemedController.text,
+          };
+          FirebaseDatabase.instance
+              .ref()
+              .child("ARM_branch_data_saved")
+              .child(savedValue.toString())
+              .child("Recived")
+              .push()
+              .set(reqData)
+              .then((_) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      savedValue.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                ),
-              );
-            })
-            .catchError((error) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Failed to update data: $error')),
-              );
-            });
+                );
+              })
+              .catchError((error) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to update data: $error')),
+                );
+              });
+        }
       },
       duration: const Duration(milliseconds: 500),
       icons: <AnimatedIconItem>[
         AnimatedIconItem(
           icon: Icon(Icons.send, color: Colors.white),
+
           tooltip: "Turn into Light Mode",
           backgroundColor: Colors.blue,
         ),
         AnimatedIconItem(
-          icon: Icon(Icons.done_sharp, color: Colors.blue),
-          backgroundColor: Colors.white,
+          icon: Icon(Icons.send, color: Colors.white),
+          backgroundColor: Colors.blue,
           tooltip: "Turn into Dark Mode",
         ),
       ],
