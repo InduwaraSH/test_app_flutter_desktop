@@ -6,16 +6,20 @@ import 'package:test_code/ARM_SelectProvider.dart';
 import 'package:test_code/dateTime.dart';
 import 'package:test_code/send_button.dart';
 
-class form_RM extends StatefulWidget {
+class form_RM_Recived extends StatefulWidget {
   final String location;
   final String position;
-  const form_RM({super.key, required this.location, required this.position});
+  const form_RM_Recived({
+    super.key,
+    required this.location,
+    required this.position,
+  });
 
   @override
-  State<form_RM> createState() => _form_RMState();
+  State<form_RM_Recived> createState() => _form_RM_RecivedState();
 }
 
-class _form_RMState extends State<form_RM> {
+class _form_RM_RecivedState extends State<form_RM_Recived> {
   final SerialNumberController = TextEditingController();
   final PlaceOfCoupeController = TextEditingController();
   final LetterNoController = TextEditingController();
@@ -52,6 +56,7 @@ class _form_RMState extends State<form_RM> {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
+
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,89 +123,92 @@ class _form_RMState extends State<form_RM> {
               ],
             ),
             SizedBox(height: 70),
-            Form(
-              child: CupertinoFormSection.insetGrouped(
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(170, 255, 255, 255),
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: Colors.white, width: 2),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.blueAccent.withOpacity(0.6),
-                      blurRadius: 100,
-                      spreadRadius: 0.1,
-                      offset: const Offset(1, 1),
+            Visibility(
+              visible: false,
+              child: Form(
+                child: CupertinoFormSection.insetGrouped(
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(170, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: Colors.white, width: 2),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blueAccent.withOpacity(0.6),
+                        blurRadius: 100,
+                        spreadRadius: 0.1,
+                        offset: const Offset(1, 1),
+                      ),
+                    ],
+                  ),
+                  children: <Widget>[
+                    CupertinoTextFormFieldRow(
+                      prefix: Text(
+                        "Serial Number.  : ",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'sfpro',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      placeholder: 'Enter text',
+                      controller: SerialNumberController,
+                      cursorColor: Colors.black,
+                    ),
+                    CupertinoTextFormFieldRow(
+                      prefix: Text(
+                        'Place of Coupe :',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'sfpro',
+                        ),
+                      ),
+                      controller: PlaceOfCoupeController,
+                      placeholder: 'Enter text',
+                      cursorColor: Colors.black,
+                    ),
+                    CupertinoTextFormFieldRow(
+                      prefix: Text(
+                        'Letter No           : ',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'sfpro',
+                        ),
+                      ),
+                      placeholder: 'Enter text',
+                      controller: LetterNoController,
+                      cursorColor: Colors.black,
+                    ),
+                    CupertinoTextFormFieldRow(
+                      prefix: Row(
+                        children: [
+                          Text(
+                            'Date informed   : ',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'sfpro',
+                            ),
+                          ),
+                          SimpleDatePicker(
+                            initialDate: DateTime.now(),
+                            onDateChanged: (date) {
+                              print("Selected Date: $date");
+                              setState(() {
+                                DateinforemedController.text = date.toString();
+                              });
+                            },
+                          ),
+                          CupertinoButton(
+                            child: Text("Select Date"),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                children: <Widget>[
-                  CupertinoTextFormFieldRow(
-                    prefix: Text(
-                      "Serial Number.  : ",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'sfpro',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    placeholder: 'Enter text',
-                    controller: SerialNumberController,
-                    cursorColor: Colors.black,
-                  ),
-                  CupertinoTextFormFieldRow(
-                    prefix: Text(
-                      'Place of Coupe :',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'sfpro',
-                      ),
-                    ),
-                    controller: PlaceOfCoupeController,
-                    placeholder: 'Enter text',
-                    cursorColor: Colors.black,
-                  ),
-                  CupertinoTextFormFieldRow(
-                    prefix: Text(
-                      'Letter No           : ',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'sfpro',
-                      ),
-                    ),
-                    placeholder: 'Enter text',
-                    controller: LetterNoController,
-                    cursorColor: Colors.black,
-                  ),
-                  CupertinoTextFormFieldRow(
-                    prefix: Row(
-                      children: [
-                        Text(
-                          'Date informed   : ',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'sfpro',
-                          ),
-                        ),
-                        SimpleDatePicker(
-                          initialDate: DateTime.now(),
-                          onDateChanged: (date) {
-                            print("Selected Date: $date");
-                            setState(() {
-                              DateinforemedController.text = date.toString();
-                            });
-                          },
-                        ),
-                        CupertinoButton(
-                          child: Text("Select Date"),
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
               ),
             ),
             SizedBox(height: 20),

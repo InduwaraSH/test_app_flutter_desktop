@@ -6,23 +6,24 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_code/ARM_SelectProvider.dart';
 import 'package:test_code/Home.dart';
+import 'package:test_code/RM_sent_provide.dart';
 import 'package:test_code/firstpage.dart';
 import 'package:test_code/selected_provider.dart';
 
-class middle_RM_Recived extends StatefulWidget {
+class middle_RM_Send extends StatefulWidget {
   final String location;
   final String position;
-  const middle_RM_Recived({
+  const middle_RM_Send({
     super.key,
     required this.location,
     required this.position,
   });
 
   @override
-  State<middle_RM_Recived> createState() => _homeState();
+  State<middle_RM_Send> createState() => _homeState();
 }
 
-class _homeState extends State<middle_RM_Recived> {
+class _homeState extends State<middle_RM_Send> {
   late String location;
   late String position;
   String? selectedBranch;
@@ -36,10 +37,7 @@ class _homeState extends State<middle_RM_Recived> {
 
     selectedBranch = branchName;
     // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   Provider.of<ARM_Selection_provider>(
-    //     context,
-    //     listen: false,
-    //   ).setSelected(branchName);
+    //   Provider.of<RM_Sent>(context, listen: false).setSNum(branchName);
     // });
   }
 
@@ -52,11 +50,9 @@ class _homeState extends State<middle_RM_Recived> {
   Widget SENDItem({required Map Alerts}) {
     bool isActive = selectedBranch == Alerts['Serial Number'];
 
-    Color bgColor = isActive ? Color.fromRGBO(61, 203, 63, 1) : Colors.white;
+    Color bgColor = isActive ? Colors.red.shade400 : Colors.white;
     Color textColor = isActive ? Colors.white : Colors.black;
-    Color borderColor = isActive
-        ? Color.fromRGBO(61, 203, 63, 1)
-        : Colors.white;
+    Color borderColor = isActive ? Colors.red.shade400 : Colors.white;
 
     return GestureDetector(
       onTap: () {
@@ -64,10 +60,15 @@ class _homeState extends State<middle_RM_Recived> {
           selectedBranch = Alerts['Serial Number'];
         });
 
-        // Provider.of<ARM_Selection_provider>(
-        //   context,
-        //   listen: false,
-        // ).setSelected(selectedBranch!);
+        final rmSent = Provider.of<RM_Sent>(context, listen: false);
+
+        rmSent.setSNum(Alerts['Serial Number'].toString());
+        rmSent.setPOC(Alerts['placeOfCoupe'].toString());
+        rmSent.setLetterNo(Alerts['letterNo'].toString()); // if exists in DB
+        rmSent.setDateInformed(
+          Alerts['dateInformed'].toString(),
+        ); // if exists in DB
+        rmSent.setSelected(selectedBranch.toString());
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 400),
@@ -80,9 +81,7 @@ class _homeState extends State<middle_RM_Recived> {
           border: Border.all(color: borderColor, width: 2),
           boxShadow: [
             BoxShadow(
-              color: isActive
-                  ? Color.fromRGBO(61, 203, 63, 1)
-                  : Colors.grey.withOpacity(0.3),
+              color: isActive ? Colors.pink : Colors.grey.withOpacity(0.3),
               blurRadius: isActive ? 20 : 1,
               spreadRadius: isActive ? 0 : 0,
               offset: const Offset(0, 2),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_code/Home_RM.dart';
 import 'package:test_code/form_RM.dart';
+import 'package:test_code/form_RW_Sent.dart';
 import 'package:test_code/middle_RM.dart';
 import 'package:test_code/middle_RM_Create.dart';
 import 'package:test_code/middle_RM_Recived.dart';
@@ -43,7 +44,7 @@ class _DetailPanelState extends State<DetailPanel> {
       return middle_RM_Recived(location: location, position: position);
     } else if (Provider.of<SelectionProvider>(context).selected.toString() ==
         "SEND") {
-      return middle_RM_create(location: location, position: position);
+      return Sent_Form_RM(location: location, position: position);
     } else {
       return Text("Error");
     }

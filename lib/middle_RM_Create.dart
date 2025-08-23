@@ -12,7 +12,11 @@ import 'package:test_code/selected_provider.dart';
 class middle_RM_create extends StatefulWidget {
   final String location;
   final String position;
-  const middle_RM_create({super.key, required this.location, required this.position});
+  const middle_RM_create({
+    super.key,
+    required this.location,
+    required this.position,
+  });
 
   @override
   State<middle_RM_create> createState() => _homeState();
@@ -62,7 +66,7 @@ class _homeState extends State<middle_RM_create> {
     Color textColor = isActive ? Colors.white : Colors.black;
     Color borderColor = isActive
         ? Colors.blueAccent
-        : const Color.fromARGB(255, 248, 248, 248);
+        : Colors.white; // Color.fromARGB(255, 248, 248, 248);
 
     return GestureDetector(
       onTap: () {
