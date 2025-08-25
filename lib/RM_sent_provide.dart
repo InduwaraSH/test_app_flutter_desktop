@@ -5,13 +5,13 @@ class RM_Sent with ChangeNotifier {
   String? _poc;
   String? _letter_no;
   String? _date_informed;
-  String? _selected;
+  bool? _selected;
 
   String? get s_num => _s_num;
   String? get poc => _poc;
   String? get letter_no => _letter_no;
   String? get date_informed => _date_informed;
-  String? get selected => _selected;
+  bool? get selected => _selected;
 
   void setSNum(String key) {
     _s_num = key;
@@ -33,8 +33,8 @@ class RM_Sent with ChangeNotifier {
     notifyListeners();
   }
 
-  void setSelected(String key) {
-    _selected = key;
+  void setSelected(bool key) {
+    _selected = key as bool?;
     notifyListeners();
   }
 }

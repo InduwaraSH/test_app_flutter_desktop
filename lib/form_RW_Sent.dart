@@ -56,7 +56,7 @@ class _Sent_Form_RMState extends State<Sent_Form_RM> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Visibility(
-        visible: true,
+        visible: Provider.of<RM_Sent>(context).selected ?? true,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
@@ -64,76 +64,84 @@ class _Sent_Form_RMState extends State<Sent_Form_RM> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  SendButton_animated(
-                    SerialNumberController,
-                    PlaceOfCoupeController,
-                    LetterNoController,
-                    DateinforemedController,
-                    position,
-                  ),
-                  SizedBox(width: 10),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.end,
+              //   children: [
+              //     SendButton_animated(
+              //       SerialNumberController,
+              //       PlaceOfCoupeController,
+              //       LetterNoController,
+              //       DateinforemedController,
+              //       position,
+              //     ),
+              //     SizedBox(width: 10),
+              //   ],
+              // ),
               SizedBox(height: 30),
               Center(
                 child: Text(
-                  "Enumeration And Wayside Deport Register For Donated Timber.",
+                  "Enumeration And Wayside \n Deport Register For Donated Timber.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 30,
                     fontFamily: 'DMSerif',
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: Color.fromRGBO(145, 142, 214, 1),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  SizedBox(width: 50),
-                  Text(
-                    "From : RM Branch in $location",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontFamily: 'DMSerif',
-                      fontSize: 15,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.bold,
-                      color: const Color.fromARGB(255, 59, 59, 59),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  SizedBox(width: 50),
-                  Text(
-                    "To : ARM Branch in ${Provider.of<ARM_Selection_provider>(context).selected.toString() ?? "Select Branch"}",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontFamily: 'DMSerif',
-                      fontSize: 15,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.bold,
-                      color: const Color.fromARGB(255, 59, 59, 59),
-                    ),
-                  ),
-                ],
-              ),
               SizedBox(height: 70),
+              Row(
+                children: [
+                  SizedBox(width: 50),
+                  Text(
+                    "From :   RM Branch in $location",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontFamily: 'DMSerif',
+                      fontSize: 18,
+
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromRGBO(117, 106, 182, 1),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 5),
+              Row(
+                children: [
+                  SizedBox(width: 50),
+                  Text(
+                    "To      :   ARM Branch in ${Provider.of<ARM_Selection_provider>(context).selected.toString() ?? "Select Branch"}",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontFamily: 'DMSerif',
+                      fontSize: 18,
+
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromRGBO(117, 106, 182, 1),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 50),
               Form(
                 child: CupertinoFormSection.insetGrouped(
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(170, 255, 255, 255),
+                    color: const Color.fromARGB(76, 201, 203, 255),
                     borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: Colors.white, width: 2),
+                    border: Border.all(
+                      color: Color.fromRGBO(177, 175, 255, 0.62),
+                      width: 2,
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.blueAccent.withOpacity(0.6),
+                        color: const Color.fromARGB(
+                          255,
+                          204,
+                          217,
+                          233,
+                        ).withOpacity(0.6),
                         blurRadius: 100,
                         spreadRadius: 0.1,
                         offset: const Offset(1, 1),
@@ -143,33 +151,33 @@ class _Sent_Form_RMState extends State<Sent_Form_RM> {
                   children: <Widget>[
                     CupertinoTextFormFieldRow(
                       prefix: Text(
-                        Provider.of<RM_Sent>(context).s_num.toString(),
+                        "Serial No              :   ${Provider.of<RM_Sent>(context).s_num.toString()}",
                         style: TextStyle(
-                          color: Colors.black,
-                          fontFamily: 'sfpro',
-                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(71, 61, 129, 1),
+                          fontFamily: 'RoboSerif',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 20,
                         ),
                       ),
-                      initialValue: Provider.of<RM_Sent>(
-                        context,
-                      ).s_num.toString(), // show text only
+                      // show text only
                       enabled: false,
                       decoration: BoxDecoration(
                         color: Color.fromARGB(0, 255, 255, 255),
                       ), // remove background
                       placeholder: null, // remove placeholder
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Color.fromRGBO(117, 106, 182, 1),
                         fontFamily: 'sfpro',
                       ),
                     ),
                     CupertinoTextFormFieldRow(
                       prefix: Text(
-                        'Place of Coupe : ${Provider.of<RM_Sent>(context).s_num.toString()}',
+                        'Place of Coupe  :   ${Provider.of<RM_Sent>(context).poc.toString()}',
                         style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'sfpro',
+                          color: Color.fromRGBO(71, 61, 129, 1),
+                          fontFamily: 'RoboSerif',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 20,
                         ),
                       ),
                       //controller: PlaceOfCoupeController,
@@ -182,40 +190,32 @@ class _Sent_Form_RMState extends State<Sent_Form_RM> {
                     ),
                     CupertinoTextFormFieldRow(
                       prefix: Text(
-                        'Letter No           : ',
+                        'Letter No              :   ${Provider.of<RM_Sent>(context).letter_no.toString()}',
                         style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'sfpro',
+                          color: Color.fromRGBO(71, 61, 129, 1),
+                          fontFamily: 'RoboSerif',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 20,
                         ),
                       ),
-                      placeholder: 'Enter text',
-                      controller: LetterNoController,
-                      cursorColor: Colors.black,
+                      placeholder: null,
+                      enabled: false,
+
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(0, 255, 255, 255),
+                      ),
                     ),
                     CupertinoTextFormFieldRow(
                       prefix: Row(
                         children: [
                           Text(
-                            'Date informed   : ',
+                            'Date informed    :   ${Provider.of<RM_Sent>(context).date_informed.toString()}',
                             style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'sfpro',
+                              color: Color.fromRGBO(71, 61, 129, 1),
+                              fontFamily: 'RoboSerif',
+                              fontWeight: FontWeight.w900,
+                              fontSize: 20,
                             ),
-                          ),
-                          SimpleDatePicker(
-                            initialDate: DateTime.now(),
-                            onDateChanged: (date) {
-                              print("Selected Date: $date");
-                              setState(() {
-                                DateinforemedController.text = date.toString();
-                              });
-                            },
-                          ),
-                          CupertinoButton(
-                            child: Text("Select Date"),
-                            onPressed: () {},
                           ),
                         ],
                       ),

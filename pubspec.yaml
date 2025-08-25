@@ -95,7 +95,19 @@ flutter:
     - family: DMSerif
       fonts:
         - asset: fonts/DMSerif.ttf
-        
+
+    - family: sfproRoundSemiB
+      fonts:
+        - asset: fonts/sfproRoundSemiB.ttf
+
+    - family: sfProDisplaySemioB
+      fonts:
+        - asset: fonts/sfProDisplaySemioB.otf
+    
+    - family: RoboSerif
+      fonts:
+        - asset: fonts/RoboSerif.ttf
+
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

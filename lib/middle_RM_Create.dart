@@ -62,12 +62,15 @@ class _homeState extends State<middle_RM_create> {
   Widget branchItem({required String branchName, required Map branchData}) {
     bool isActive = selectedBranch == branchName;
 
-    Color bgColor = isActive ? Colors.blueAccent : Colors.white;
-    Color textColor = isActive ? Colors.white : Colors.black;
+    Color bgColor = isActive
+        ? Color.fromRGBO(104, 127, 229, 1)
+        : const Color.fromRGBO(222, 236, 255, 1);
+    Color textColor = isActive
+        ? Colors.white
+        : Color.fromRGBO(104, 127, 229, 1);
     Color borderColor = isActive
-        ? Colors.blueAccent
-        : Colors.white; // Color.fromARGB(255, 248, 248, 248);
-
+        ? Color.fromRGBO(104, 127, 229, 1)
+        : const Color.fromRGBO(222, 236, 255, 1);
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -96,7 +99,7 @@ class _homeState extends State<middle_RM_create> {
           boxShadow: [
             BoxShadow(
               color: isActive
-                  ? Colors.blueAccent.withOpacity(0.6)
+                  ? Color.fromRGBO(104, 127, 229, 1)
                   : Colors.grey.withOpacity(0.3),
               blurRadius: isActive ? 15 : 6,
               spreadRadius: isActive ? 2 : 0,
@@ -114,7 +117,8 @@ class _homeState extends State<middle_RM_create> {
                   branchName, // Galle / Matara
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'sfproRoundSemiB',
                     color: textColor,
                   ),
                 ),
@@ -125,7 +129,8 @@ class _homeState extends State<middle_RM_create> {
             Text(
               "Branch ID: ${branchData['ARM_branchID']}",
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 12,
+                fontFamily: 'sfproRoundSemiB',
                 fontWeight: FontWeight.w400,
                 color: textColor,
               ),

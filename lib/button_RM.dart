@@ -39,11 +39,11 @@ class _Button_RMState extends State<Button_RM> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        buildColorButton("CREATE", Theme.of(context).colorScheme.onPrimary),
+        buildColorButton("CREATE", Color.fromRGBO(104, 127, 229, 1)),
         SizedBox(height: 15),
-        buildColorButton("RECIVED", Theme.of(context).colorScheme.onSecondary),
+        buildColorButton("RECIVED", Color.fromRGBO(104, 127, 229, 1)),
         SizedBox(height: 15),
-        buildColorButton("SEND", Theme.of(context).colorScheme.onError),
+        buildColorButton("SEND", Color.fromRGBO(177, 175, 255, 1)),
       ],
     );
   }

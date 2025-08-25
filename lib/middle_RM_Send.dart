@@ -50,9 +50,15 @@ class _homeState extends State<middle_RM_Send> {
   Widget SENDItem({required Map Alerts}) {
     bool isActive = selectedBranch == Alerts['Serial Number'];
 
-    Color bgColor = isActive ? Colors.red.shade400 : Colors.white;
-    Color textColor = isActive ? Colors.white : Colors.black;
-    Color borderColor = isActive ? Colors.red.shade400 : Colors.white;
+    Color bgColor = isActive
+        ? Color.fromRGBO(177, 175, 255, 1)
+        : Color.fromRGBO(201, 203, 255, 0.107);
+    Color textColor = isActive
+        ? Colors.white
+        : Color.fromRGBO(117, 106, 182, 1);
+    Color borderColor = isActive
+        ? Color.fromRGBO(177, 175, 255, 1)
+        : Color.fromRGBO(201, 203, 255, 0);
 
     return GestureDetector(
       onTap: () {
@@ -64,11 +70,11 @@ class _homeState extends State<middle_RM_Send> {
 
         rmSent.setSNum(Alerts['Serial Number'].toString());
         rmSent.setPOC(Alerts['placeOfCoupe'].toString());
-        rmSent.setLetterNo(Alerts['letterNo'].toString()); // if exists in DB
+        rmSent.setLetterNo(Alerts['LetterNo'].toString()); // if exists in DB
         rmSent.setDateInformed(
-          Alerts['dateInformed'].toString(),
+          Alerts['DateInformed'].toString(),
         ); // if exists in DB
-        rmSent.setSelected(selectedBranch.toString());
+        rmSent.setSelected(true);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 400),
@@ -81,7 +87,9 @@ class _homeState extends State<middle_RM_Send> {
           border: Border.all(color: borderColor, width: 2),
           boxShadow: [
             BoxShadow(
-              color: isActive ? Colors.pink : Colors.grey.withOpacity(0.3),
+              color: isActive
+                  ? Color.fromRGBO(177, 175, 255, 1)
+                  : Color.fromRGBO(201, 203, 255, 0.152),
               blurRadius: isActive ? 20 : 1,
               spreadRadius: isActive ? 0 : 0,
               offset: const Offset(0, 2),
@@ -98,8 +106,9 @@ class _homeState extends State<middle_RM_Send> {
                   Alerts["placeOfCoupe"], // Galle / Matara
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     color: textColor,
+                    fontFamily: 'sfproRoundSemiB',
                   ),
                 ),
                 Icon(Icons.apartment, color: textColor),
@@ -109,9 +118,10 @@ class _homeState extends State<middle_RM_Send> {
             Text(
               "Serial Number: ${Alerts['Serial Number']}",
               style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
+                fontSize: 12,
+
                 color: textColor,
+                fontFamily: 'sfproRoundSemiB',
               ),
             ),
           ],

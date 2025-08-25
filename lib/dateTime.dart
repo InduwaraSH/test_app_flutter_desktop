@@ -52,11 +52,11 @@ class _SimpleDatePickerState extends State<SimpleDatePicker> {
     return CupertinoButton(
       onPressed: _showDatePickerDialog,
       child: Text(
-        '${_selectedDate.year} / ${_selectedDate.month} / ${_selectedDate.day}',
+        '${_selectedDate.year} - ${_selectedDate.month} - ${_selectedDate.day}',
         style: const TextStyle(
-          fontSize: 18,
+          fontSize: 20,
           color: Colors.black,
-          fontFamily: 'sfpro',
+          fontFamily: 'RoboSerif',
           fontWeight: FontWeight.bold,
         ),
       ),
