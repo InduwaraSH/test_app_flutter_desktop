@@ -65,7 +65,7 @@ class _form_RMState extends State<form_RM> {
                   PlaceOfCoupeController,
                   LetterNoController,
                   DateinforemedController,
-                  position,
+                  position, location
                 ),
                 SizedBox(width: 10),
               ],

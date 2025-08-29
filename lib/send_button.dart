@@ -11,13 +11,15 @@ class SendButton_animated extends StatefulWidget {
   final TextEditingController LetterNoController;
   final TextEditingController DateinforemedController;
   final String position;
+  final String location;
 
   const SendButton_animated(
     this.SerialNumberController,
     this.PlaceOfCoupeController,
     this.LetterNoController,
     this.DateinforemedController,
-    this.position, {
+    this.position,
+    this.location, {
     super.key,
   });
 
@@ -32,12 +34,14 @@ class _SendButton_animatedState extends State<SendButton_animated> {
   late TextEditingController DateinforemedController;
   late DatabaseReference databaseReference;
   late String position;
+  late String location;
   String? savedValue;
 
   @override
   void initState() {
     super.initState();
     position = widget.position;
+    location = widget.location;
     SerialNumberController = widget.SerialNumberController;
     PlaceOfCoupeController = widget.PlaceOfCoupeController;
     LetterNoController = widget.LetterNoController;
@@ -82,6 +86,10 @@ class _SendButton_animatedState extends State<SendButton_animated> {
             'placeOfCoupe': PlaceOfCoupeController.text,
             'LetterNo': LetterNoController.text,
             'DateInformed': DateinforemedController.text,
+            'ARM_Branch_Name': Provider.of<ARM_Selection_provider>(
+              context,
+              listen: false,
+            ).selected.toString(),
           };
           FirebaseDatabase.instance
               .ref()
@@ -91,10 +99,20 @@ class _SendButton_animatedState extends State<SendButton_animated> {
               .push()
               .set(reqData)
               .then((_) {
+                FirebaseDatabase.instance
+                    .ref()
+                    .child("RM_branch_data_saved")
+                    .child(location.toString())
+                    .child("Sent")
+                    .push()
+                    .set(reqData);
+              })
+              .then((_) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
+                    backgroundColor: Colors.green,
                     content: Text(
-                      savedValue.toString(),
+                      "Request Sent Successfully",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

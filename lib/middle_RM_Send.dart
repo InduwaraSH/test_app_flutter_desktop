@@ -43,9 +43,9 @@ class _homeState extends State<middle_RM_Send> {
 
   late Query dbrefRM_related_ARM_Offices = FirebaseDatabase.instance
       .ref()
-      .child("ARM_branch_data_saved")
+      .child("RM_branch_data_saved")
       .child(location)
-      .child("Recived");
+      .child("Sent");
 
   Widget SENDItem({required Map Alerts}) {
     bool isActive = selectedBranch == Alerts['Serial Number'];
@@ -73,6 +73,9 @@ class _homeState extends State<middle_RM_Send> {
         rmSent.setLetterNo(Alerts['LetterNo'].toString()); // if exists in DB
         rmSent.setDateInformed(
           Alerts['DateInformed'].toString(),
+        ); // if exists in DB
+        rmSent.setARMBranchName(
+          Alerts['ARM_Branch_Name'].toString(),
         ); // if exists in DB
         rmSent.setSelected(true);
       },

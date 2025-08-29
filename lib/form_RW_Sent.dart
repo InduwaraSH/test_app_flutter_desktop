@@ -112,7 +112,7 @@ class _Sent_Form_RMState extends State<Sent_Form_RM> {
                 children: [
                   SizedBox(width: 50),
                   Text(
-                    "To      :   ARM Branch in ${Provider.of<ARM_Selection_provider>(context).selected.toString() ?? "Select Branch"}",
+                    "To      :   ARM Branch in ${Provider.of<RM_Sent>(context).arm_branch_name.toString()}",
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       fontFamily: 'DMSerif',

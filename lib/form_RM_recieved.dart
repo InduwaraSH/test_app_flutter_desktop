@@ -71,6 +71,7 @@ class _form_RM_RecivedState extends State<form_RM_Recived> {
                   LetterNoController,
                   DateinforemedController,
                   position,
+                  location
                 ),
                 SizedBox(width: 10),
               ],

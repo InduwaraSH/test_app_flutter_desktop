@@ -5,12 +5,14 @@ class RM_Sent with ChangeNotifier {
   String? _poc;
   String? _letter_no;
   String? _date_informed;
+  String? _arm_branch_name;
   bool? _selected;
 
   String? get s_num => _s_num;
   String? get poc => _poc;
   String? get letter_no => _letter_no;
   String? get date_informed => _date_informed;
+  String? get arm_branch_name => _arm_branch_name;
   bool? get selected => _selected;
 
   void setSNum(String key) {
@@ -30,6 +32,12 @@ class RM_Sent with ChangeNotifier {
 
   void setDateInformed(String key) {
     _date_informed = key;
+    notifyListeners();
+
+  }
+
+  void setARMBranchName(String key) {
+    _arm_branch_name = key;
     notifyListeners();
   }
 
