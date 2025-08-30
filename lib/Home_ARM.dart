@@ -7,10 +7,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frosted_glass_effect/frosted_glass_effect.dart';
 import 'package:provider/provider.dart';
+import 'package:test_code/ARM/detail_panel_ARM.dart';
+import 'package:test_code/ARM/middle_ARM.dart';
 import 'package:test_code/animated_but.dart';
 import 'package:test_code/button.dart';
 import 'package:test_code/button_ARM.dart';
 import 'package:test_code/firstpage.dart';
+import 'package:test_code/middle_RM.dart';
 import 'package:test_code/midlle_container_data.dart';
 import 'package:test_code/selected_provider.dart';
 import 'package:test_code/theme.dart';
@@ -94,7 +97,7 @@ class _Home_ARMState extends State<Home_ARM> {
                 ],
               ),
               SizedBox(width: 30),
-              alerts(location: new_location, position: new_position),
+              ARM_Middle(location: new_location, position: new_position),
               SizedBox(width: 30),
               Column(
                 children: [
@@ -105,6 +108,10 @@ class _Home_ARMState extends State<Home_ARM> {
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(26),
+                    ),
+                    child: DetailPanel_ARM(
+                      location: new_location,
+                      position: new_position,
                     ),
                   ),
                 ],
