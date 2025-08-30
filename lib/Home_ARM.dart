@@ -69,26 +69,47 @@ class _Home_ARMState extends State<Home_ARM> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
 
-                          children: [AnimatedButton(), SizedBox(width: 8)],
+                          children: [
+                            AnimatedButton(),
+                            SizedBox(width: 8),
+                            SizedBox(
+                              width: 40, // button width
+                              height: 40, // button height
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  FirebaseAuth.instance.signOut().whenComplete(
+                                    () {
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => Firstpage(),
+                                        ), // Login page
+                                        (route) => false, // remove all routes
+                                      );
+                                    },
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  shape: const CircleBorder(),
+                                  padding: const EdgeInsets.all(9),
+                                  backgroundColor: Colors.black, // button color
+                                  //elevation: 6, // shadow
+                                ),
+                                child: const Icon(
+                                  Icons.logout_rounded,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                          ],
                         ),
                         SizedBox(height: 40),
                         Button_ARM(),
                         SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            FirebaseAuth.instance.signOut().whenComplete(() {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => Firstpage(),
-                                ), // Login page
-                                (route) => false, // remove all routes
-                              );
-                            });
-                          },
-                          child: Text("Logout"),
-                        ),
 
+                        // Place this above the RECIVED button in your widget tree
                         SizedBox(height: 20),
                       ],
                     ),
