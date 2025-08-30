@@ -5,8 +5,37 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-class PdfStyledPage extends StatelessWidget {
-  const PdfStyledPage({super.key});
+class PdfStyledPage extends StatefulWidget {
+  final String S_Num;
+  final String PlaceOfCoupe;
+  final String LetterNo;
+  final String Dateinforemed;
+  const PdfStyledPage(
+    this.S_Num,
+    this.PlaceOfCoupe,
+    this.LetterNo,
+    this.Dateinforemed, {
+    super.key,
+  });
+
+  @override
+  State<PdfStyledPage> createState() => _PdfStyledPageState();
+}
+
+class _PdfStyledPageState extends State<PdfStyledPage> {
+  late String S_Num;
+  late String PlaceOfCoupe;
+  late String LetterNo;
+  late String Dateinforemed;
+
+  @override
+  void initState() {
+    super.initState();
+    S_Num = widget.S_Num;
+    PlaceOfCoupe = widget.PlaceOfCoupe;
+    LetterNo = widget.LetterNo;
+    Dateinforemed = widget.Dateinforemed;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +43,7 @@ class PdfStyledPage extends StatelessWidget {
       appBar: AppBar(title: const Text("")),
       body: PdfPreview(
         build: (format) => _generateStyledPdf(format),
-        pdfFileName: "donated_timber_register.pdf",
+        pdfFileName: "donated_timber_register $S_Num .pdf",
         allowSharing: false,
         canChangePageFormat: false,
         canChangeOrientation: false,
@@ -97,18 +126,13 @@ class PdfStyledPage extends StatelessWidget {
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  _buildRow("Serial No", "56666/yu/i/8", bold, regular),
+                  _buildRow("Serial No", S_Num, bold, regular),
                   _divider(),
-                  _buildRow("Place of Coupe", "Anagarika road", bold, regular),
+                  _buildRow("Place of Coupe", PlaceOfCoupe, bold, regular),
                   _divider(),
-                  _buildRow("Letter No", "433453u", bold, regular),
+                  _buildRow("Letter No", LetterNo, bold, regular),
                   _divider(),
-                  _buildRow(
-                    "Date informed",
-                    "2025-08-30 15:11:48",
-                    bold,
-                    regular,
-                  ),
+                  _buildRow("Date informed", Dateinforemed, bold, regular),
                 ],
               ),
             ),

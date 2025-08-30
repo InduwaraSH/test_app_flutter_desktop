@@ -65,19 +65,51 @@ class _Sent_Form_RMState extends State<Sent_Form_RM> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 10),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: [
-              //     SendButton_animated(
-              //       SerialNumberController,
-              //       PlaceOfCoupeController,
-              //       LetterNoController,
-              //       DateinforemedController,
-              //       position,
-              //     ),
-              //     SizedBox(width: 10),
-              //   ],
-              // ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: 39, // button width
+                    height: 39, // button height
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PdfStyledPage(
+                              Provider.of<RM_Sent>(context).s_num.toString(),
+                              Provider.of<RM_Sent>(context).poc.toString(),
+                              Provider.of<RM_Sent>(
+                                context,
+                              ).letter_no.toString(),
+                              Provider.of<RM_Sent>(
+                                context,
+                              ).date_informed.toString(),
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                        padding: const EdgeInsets.only(left: 0, top: 0),
+                        backgroundColor: Color.fromRGBO(
+                          145,
+                          142,
+                          214,
+                          1,
+                        ), // button color
+                        //elevation: 6, // shadow
+                      ),
+                      child: const Icon(
+                        Icons.local_print_shop_outlined,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                ],
+              ),
               SizedBox(height: 30),
               Center(
                 child: Text(
@@ -125,17 +157,15 @@ class _Sent_Form_RMState extends State<Sent_Form_RM> {
                   ),
                 ],
               ),
-              CupertinoButton(
-                child: Text("Submit"),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PdfStyledPage(),
-                    ),
-                  );
-                },
-              ),
+              // CupertinoButton(
+              //   child: Text("Submit"),
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => PdfStyledPage()),
+              //     );
+              //   },
+              // ),
               SizedBox(height: 50),
               Form(
                 child: CupertinoFormSection.insetGrouped(
