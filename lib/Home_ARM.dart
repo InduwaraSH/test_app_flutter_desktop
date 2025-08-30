@@ -73,8 +73,8 @@ class _Home_ARMState extends State<Home_ARM> {
                             AnimatedButton(),
                             SizedBox(width: 8),
                             SizedBox(
-                              width: 40, // button width
-                              height: 40, // button height
+                              width: 39, // button width
+                              height: 39, // button height
                               child: ElevatedButton(
                                 onPressed: () {
                                   FirebaseAuth.instance.signOut().whenComplete(
@@ -91,13 +91,16 @@ class _Home_ARMState extends State<Home_ARM> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   shape: const CircleBorder(),
-                                  padding: const EdgeInsets.all(9),
+                                  padding: const EdgeInsets.only(
+                                    left: 6,
+                                    top: 0,
+                                  ),
                                   backgroundColor: Colors.black, // button color
                                   //elevation: 6, // shadow
                                 ),
                                 child: const Icon(
-                                  Icons.logout_rounded,
-                                  color: Colors.white,
+                                  Icons.logout,
+                                  color: Colors.amber,
                                   size: 20,
                                 ),
                               ),

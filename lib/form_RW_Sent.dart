@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:test_code/ARM_SelectProvider.dart';
 import 'package:test_code/RM_sent_provide.dart';
 import 'package:test_code/dateTime.dart';
+import 'package:test_code/pdf.dart';
 import 'package:test_code/send_button.dart';
 
 class Sent_Form_RM extends StatefulWidget {
@@ -123,6 +124,17 @@ class _Sent_Form_RMState extends State<Sent_Form_RM> {
                     ),
                   ),
                 ],
+              ),
+              CupertinoButton(
+                child: Text("Submit"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PdfStyledPage(),
+                    ),
+                  );
+                },
               ),
               SizedBox(height: 50),
               Form(

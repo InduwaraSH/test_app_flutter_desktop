@@ -20,7 +20,6 @@ import 'package:test_code/selected_provider.dart';
 import 'package:test_code/theme.dart';
 import 'package:test_code/theme_provider.dart';
 
-
 import 'theme.dart';
 
 class Home_RM extends StatefulWidget {
@@ -71,31 +70,68 @@ class _Home_RMState extends State<Home_RM> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
 
-                          children: [AnimatedButton(), SizedBox(width: 8)],
+                          children: [
+                            AnimatedButton(),
+                            SizedBox(width: 8),
+                            SizedBox(
+                              width: 39, // button width
+                              height: 39, // button height
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  FirebaseAuth.instance.signOut().whenComplete(
+                                    () {
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => Firstpage(),
+                                        ), // Login page
+                                        (route) => false, // remove all routes
+                                      );
+                                    },
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  shape: const CircleBorder(),
+                                  padding: const EdgeInsets.only(
+                                    left: 6,
+                                    top: 0,
+                                  ),
+                                  backgroundColor: Colors.black, // button color
+                                  //elevation: 6, // shadow
+                                ),
+                                child: const Icon(
+                                  Icons.logout,
+                                  color: Colors.amber,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                          ],
                         ),
                         SizedBox(height: 40),
                         Button_RM(),
                         SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            FirebaseAuth.instance.signOut().whenComplete(() {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => Firstpage(),
-                                ), // Login page
-                                (route) => false, // remove all routes
-                              );
-                            });
-                          },
-                          child: Text("Logout"),
-                        ),
 
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     FirebaseAuth.instance.signOut().whenComplete(() {
+                        //       Navigator.pushAndRemoveUntil(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //           builder: (_) => Firstpage(),
+                        //         ), // Login page
+                        //         (route) => false, // remove all routes
+                        //       );
+                        //     });
+                        //   },
+                        //   child: Text("Logout"),
+                        // ),
                         SizedBox(height: 20),
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 12),
                 ],
               ),
               SizedBox(width: 30),
