@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_code/Home_RM.dart';
+import 'package:test_code/RM/form_RM_Sent.dart';
 import 'package:test_code/form_RM_Create.dart';
 import 'package:test_code/form_RW_Sent.dart';
 import 'package:test_code/middle_RM.dart';
@@ -35,7 +36,6 @@ class _DetailPanelState extends State<DetailPanel> {
 
   @override
   Widget build(BuildContext context) {
-
     if (Provider.of<SelectionProvider>(context).selected.toString() ==
         "CREATE") {
       return form_RM(location: location, position: position);
@@ -44,10 +44,9 @@ class _DetailPanelState extends State<DetailPanel> {
       return middle_RM_Recived(location: location, position: position);
     } else if (Provider.of<SelectionProvider>(context).selected.toString() ==
         "SEND") {
-      return Sent_Form_RM(location: location, position: position);
+      return Sent_Form_RM_new(location: location, position: position);
     } else {
       return Text("Error");
     }
-
   }
 }

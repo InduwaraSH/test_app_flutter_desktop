@@ -110,6 +110,10 @@ flutter:
       fonts:
         - asset: fonts/RoboSerif.ttf
 
+    - family: AbhayaLibre
+      fonts:
+        - asset: fonts/AbhayaLibre.ttf
+
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

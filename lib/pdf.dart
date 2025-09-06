@@ -58,6 +58,7 @@ class _PdfStyledPageState extends State<PdfStyledPage> {
 
     final regular = pw.Font.ttf(await rootBundle.load("fonts/RoboSerif.ttf"));
     final bold = pw.Font.ttf(await rootBundle.load("fonts/DMSerif.ttf"));
+    final sinhala = pw.Font.ttf(await rootBundle.load("fonts/AbhayaLibre.ttf"));
     doc.addPage(
       pw.Page(
         pageFormat: format,
@@ -128,7 +129,7 @@ class _PdfStyledPageState extends State<PdfStyledPage> {
                 children: [
                   _buildRow("Serial No", S_Num, bold, regular),
                   _divider(),
-                  _buildRow("Place of Coupe", PlaceOfCoupe, bold, regular),
+                  _buildRow("Place of Coupe", PlaceOfCoupe, bold, sinhala),
                   _divider(),
                   _buildRow("Letter No", LetterNo, bold, regular),
                   _divider(),

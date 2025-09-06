@@ -6,121 +6,144 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_code/ARM_SelectProvider.dart';
 import 'package:test_code/Home.dart';
-import 'package:test_code/RM_sent_provide.dart';
 import 'package:test_code/firstpage.dart';
 import 'package:test_code/selected_provider.dart';
 
-class middle_RM_Send_new extends StatefulWidget {
+class middle_RM_create_new extends StatefulWidget {
   final String location;
   final String position;
-  const middle_RM_Send_new({
+  const middle_RM_create_new({
     super.key,
     required this.location,
     required this.position,
   });
 
   @override
-  State<middle_RM_Send_new> createState() => _homeState();
+  State<middle_RM_create_new> createState() => _homeState();
 }
 
-class _homeState extends State<middle_RM_Send_new> {
+class _homeState extends State<middle_RM_create_new> {
   late String location;
   late String position;
   String? selectedBranch;
-  String branchName = "";
+  String branchName = "Galle";
 
   @override
   void initState() {
     super.initState();
     location = widget.location;
     position = widget.position;
+
     selectedBranch = branchName;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ARM_Selection_provider>(
+        context,
+        listen: false,
+      ).setSelected(branchName);
+    });
   }
 
   late Query dbrefRM_related_ARM_Offices = FirebaseDatabase.instance
       .ref()
-      .child("RM_branch_data_saved")
-      .child(location)
-      .child("Sent");
+      .child("Connection RM_ARM")
+      .child(location);
 
-  Widget SENDItem({required Map Alerts}) {
-    return SendCard(
-      alerts: Alerts,
-      isActive: selectedBranch == Alerts['Serial Number'],
+  // 🔹 Branch Item Widget (separate for hover animation)
+  Widget branchItem({required String branchName, required Map branchData}) {
+    return BranchCard(
+      branchName: branchName,
+      branchData: branchData,
+      isActive: selectedBranch == branchName,
       onSelect: () {
         setState(() {
-          selectedBranch = Alerts['Serial Number'];
+          selectedBranch = branchName;
         });
+        Provider.of<ARM_Selection_provider>(
+          context,
+          listen: false,
+        ).setSelected(branchName);
 
-        final rmSent = Provider.of<RM_Sent>(context, listen: false);
-
-        rmSent.setSNum(Alerts['Serial Number'].toString());
-        rmSent.setPOC(Alerts['placeOfCoupe'].toString());
-        rmSent.setLetterNo(Alerts['LetterNo'].toString());
-        rmSent.setDateInformed(Alerts['DateInformed'].toString());
-        rmSent.setARMBranchName(Alerts['ARM_Branch_Name'].toString());
-        rmSent.setSelected(true);
+        Provider.of<ARM_Selection_provider>(
+          context,
+          listen: false,
+        ).setType("ARM");
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 40, top: 10),
-      padding: const EdgeInsets.only(bottom: 10, top: 10),
-      width: (MediaQuery.of(context).size.width - 100) * 0.25,
-      height: MediaQuery.of(context).size.height * 0.9,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
-        borderRadius: BorderRadius.circular(26),
-      ),
-      child: FirebaseAnimatedList(
-        query: dbrefRM_related_ARM_Offices,
-        itemBuilder:
-            (
-          BuildContext context,
-          DataSnapshot datasnapshot,
-          Animation<double> animation,
-          int index,
-        ) {
-          final alerts = Map<String, dynamic>.from(
-            datasnapshot.value as Map,
-          );
-          alerts['key'] = datasnapshot.key;
-          return SENDItem(Alerts: alerts);
-        },
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(bottom: 40, top: 10),
+            padding: const EdgeInsets.only(bottom: 10, top: 10),
+            width: (MediaQuery.of(context).size.width - 100) * 0.25,
+            height: MediaQuery.of(context).size.height * 0.9,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(26),
+            ),
+            child: FirebaseAnimatedList(
+              query: dbrefRM_related_ARM_Offices,
+              itemBuilder:
+                  (
+                    BuildContext context,
+                    DataSnapshot datasnapshot,
+                    Animation<double> animation,
+                    int index,
+                  ) {
+                    if (datasnapshot.value == null) {
+                      return const SizedBox();
+                    }
+
+                    Map branchData = Map<String, dynamic>.from(
+                      datasnapshot.value as Map,
+                    );
+                    String branchName = datasnapshot.key ?? "Unknown";
+
+                    return branchItem(
+                      branchName: branchName,
+                      branchData: branchData,
+                    );
+                  },
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-/// 🔹 Separate Stateful Card Widget for hover animation + modern UI
-class SendCard extends StatefulWidget {
-  final Map alerts;
+/// 🔹 Separate Stateful Card Widget with hover effect + animation
+class BranchCard extends StatefulWidget {
+  final String branchName;
+  final Map branchData;
   final bool isActive;
   final VoidCallback onSelect;
 
-  const SendCard({
+  const BranchCard({
     super.key,
-    required this.alerts,
+    required this.branchName,
+    required this.branchData,
     required this.isActive,
     required this.onSelect,
   });
 
   @override
-  State<SendCard> createState() => _SendCardState();
+  State<BranchCard> createState() => _BranchCardState();
 }
 
-class _SendCardState extends State<SendCard> {
+class _BranchCardState extends State<BranchCard> {
   bool isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    Color activeColor1 = const Color(0xFFB1AFFF);
-    Color activeColor2 = const Color(0xFF857CFF);
-    Color inactiveColor1 = const Color(0xFFEDEBFF);
-    Color inactiveColor2 = const Color(0xFFDAD6FF);
+    Color activeColor1 = const Color(0xFF687FE5);
+    Color activeColor2 = const Color(0xFF5065D8);
+    Color inactiveColor1 = const Color(0xFFE2ECFF);
+    Color inactiveColor2 = const Color(0xFFD6E4FA);
 
     return MouseRegion(
       onEnter: (_) => setState(() => isHovered = true),
@@ -167,18 +190,15 @@ class _SendCardState extends State<SendCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Flexible(
-                      child: Text(
-                        widget.alerts["placeOfCoupe"] ?? "Unknown",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'sfproRoundSemiB',
-                          color: widget.isActive
-                              ? Colors.white
-                              : const Color(0xFF756AB6),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                    Text(
+                      widget.branchName,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'sfproRoundSemiB',
+                        color: widget.isActive
+                            ? Colors.white
+                            : const Color(0xFF5065D8),
                       ),
                     ),
                     Container(
@@ -186,7 +206,7 @@ class _SendCardState extends State<SendCard> {
                       decoration: BoxDecoration(
                         color: widget.isActive
                             ? Colors.white.withOpacity(0.2)
-                            : const Color(0xFF756AB6).withOpacity(0.1),
+                            : const Color(0xFF5065D8).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
@@ -194,7 +214,7 @@ class _SendCardState extends State<SendCard> {
                         size: 22,
                         color: widget.isActive
                             ? Colors.white
-                            : const Color(0xFF756AB6),
+                            : const Color(0xFF5065D8),
                       ),
                     ),
                   ],
@@ -202,16 +222,16 @@ class _SendCardState extends State<SendCard> {
 
                 const SizedBox(height: 12),
 
-                // 🔹 Serial Number
+                // 🔹 Branch ID
                 Text(
-                  "Serial Number: ${widget.alerts['Serial Number']}",
+                  "Branch ID: ${widget.branchData['ARM_branchID']}",
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'sfproRoundSemiB',
                     fontWeight: FontWeight.w400,
                     color: widget.isActive
                         ? Colors.white.withOpacity(0.9)
-                        : const Color(0xFF756AB6),
+                        : const Color(0xFF5065D8),
                   ),
                 ),
               ],

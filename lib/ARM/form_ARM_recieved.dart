@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_code/ARM/form_ARM_Create.dart';
 import 'package:test_code/ARM_SelectProvider.dart';
 import 'package:test_code/RM_sent_provide.dart';
 import 'package:test_code/dateTime.dart';
@@ -223,7 +224,14 @@ class _form_ARM_RecivedState extends State<form_ARM_Recived> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 50),
+              Divider(
+                thickness: 2,
+                indent: 200,
+                endIndent: 200,
+                color: Color.fromRGBO(104, 127, 229, 0.591),
+              ),
+              form_ARM_Create(location: location, position: position),
             ],
           ),
         ),

@@ -44,7 +44,7 @@ class _BranchRegistrationState extends State<BranchRegistration> {
     super.initState();
     branchReference = FirebaseDatabase.instance.ref().child("RO_branches");
     branchType = widget.branchType;
-    
+
     if (branchType == 'Regional Office (RO)') {
       areaOfficeLocationVisibility = false;
     } else if (branchType == 'Area Regional Office (ARO)') {
@@ -213,7 +213,6 @@ class _BranchRegistrationState extends State<BranchRegistration> {
                   ),
                 ),
 
-                
                 SizedBox(height: 50),
                 CupertinoButton(
                   color: CupertinoColors.black,
@@ -236,81 +235,83 @@ class _BranchRegistrationState extends State<BranchRegistration> {
                       );
                       return;
                     } else {
-                      
-                      if(branchType == 'Regional Office (RO)') {
-                        branchReference = FirebaseDatabase.instance.ref().child("RM_branches");
+                      if (branchType == 'Regional Office (RO)') {
+                        branchReference = FirebaseDatabase.instance.ref().child(
+                          "RM_branches",
+                        );
                         Map<String, String> branchData = {
-                        "branchId": branchId.text,
-                        "branchPassword": branchPassword.text,
-                        "branchLocation": locationController.text,
-                      };
-                      branchReference
-                          .child(branchId.text)
-                          .set(branchData)
-                          .then((_) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Registration Successful ${locationController.text}',
-                                  style: TextStyle(color: Colors.white),
+                          "branchId": branchId.text,
+                          "branchPassword": branchPassword.text,
+                          "branchLocation": locationController.text,
+                        };
+                        branchReference
+                            .child(branchId.text)
+                            .set(branchData)
+                            .then((_) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Registration Successful ${locationController.text}',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  duration: Duration(seconds: 5),
+                                  backgroundColor: Colors.green,
                                 ),
-                                duration: Duration(seconds: 5),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                          })
-                          .catchError((error) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  "Failed to save branch data: $error",
-                                  style: TextStyle(color: Colors.white),
+                              );
+                            })
+                            .catchError((error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "Failed to save branch data: $error",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  duration: Duration(seconds: 5),
+                                  backgroundColor: Colors.redAccent,
                                 ),
-                                duration: Duration(seconds: 5),
-                                backgroundColor: Colors.redAccent,
-                              ),
-                            );
-                          });
-                      } else if(branchType == 'Area Regional Office (ARO)') {
-                       branchReference = FirebaseDatabase.instance.ref().child("ARM_branches");
+                              );
+                            });
+                      } else if (branchType == 'Area Regional Office (ARO)') {
+                        branchReference = FirebaseDatabase.instance.ref().child(
+                          "ARM_branches",
+                        );
                         Map<String, String> branchData = {
-                        "branchId": branchId.text,
-                        "Relevent RO Branch":relevantROBranch.text,
-                        "branchLocation": locationController.text,
-                      };
-                      branchReference
-                          .child(branchId.text)
-                          .set(branchData)
-                          .then((_) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Registration Successful ${locationController.text}',
-                                  style: TextStyle(color: Colors.white),
+                          "branchId": branchId.text,
+                          "Relevent RO Branch": relevantROBranch.text,
+                          "branchLocation": locationController.text,
+                        };
+                        branchReference
+                            .child(branchId.text)
+                            .set(branchData)
+                            .then((_) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Registration Successful ${locationController.text}',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  duration: Duration(seconds: 5),
+                                  backgroundColor: Colors.green,
                                 ),
-                                duration: Duration(seconds: 5),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                          })
-                          .catchError((error) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  "Failed to save branch data: $error",
-                                  style: TextStyle(color: Colors.white),
+                              );
+                            })
+                            .catchError((error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "Failed to save branch data: $error",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  duration: Duration(seconds: 5),
+                                  backgroundColor: Colors.redAccent,
                                 ),
-                                duration: Duration(seconds: 5),
-                                backgroundColor: Colors.redAccent,
-                              ),
-                            );
-                          });
+                              );
+                            });
                       }
-                      
                     }
                   },
                   child: Text(
-                    branchType,
+                    "Register Branch",
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
