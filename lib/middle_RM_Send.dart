@@ -1,14 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_code/ARM_SelectProvider.dart';
-import 'package:test_code/Home.dart';
 import 'package:test_code/RM_sent_provide.dart';
-import 'package:test_code/firstpage.dart';
-import 'package:test_code/selected_provider.dart';
 
 class middle_RM_Send_new extends StatefulWidget {
   final String location;
@@ -29,6 +25,8 @@ class _homeState extends State<middle_RM_Send_new> {
   String? selectedBranch;
   String branchName = "";
 
+  bool _isLoading = true; // global loader
+
   @override
   void initState() {
     super.initState();
@@ -43,8 +41,8 @@ class _homeState extends State<middle_RM_Send_new> {
       .child(location)
       .child("Sent");
 
-  Widget SENDItem({required Map Alerts}) {
-    return SendCard(
+  Widget SENDItem({required Map Alerts, required int index}) {
+    return _AnimatedSendCard(
       alerts: Alerts,
       isActive: selectedBranch == Alerts['Serial Number'],
       onSelect: () {
@@ -61,41 +59,149 @@ class _homeState extends State<middle_RM_Send_new> {
         rmSent.setARMBranchName(Alerts['ARM_Branch_Name'].toString());
         rmSent.setSelected(true);
       },
+      delay: Duration(milliseconds: 80 * index),
+      onAnimationStart: () {
+        // First card started animation, hide loader
+        if (_isLoading && mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 40, top: 10),
-      padding: const EdgeInsets.only(bottom: 10, top: 10),
-      width: (MediaQuery.of(context).size.width - 100) * 0.25,
-      height: MediaQuery.of(context).size.height * 0.9,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
-        borderRadius: BorderRadius.circular(26),
-      ),
-      child: FirebaseAnimatedList(
-        query: dbrefRM_related_ARM_Offices,
-        itemBuilder:
-            (
-          BuildContext context,
-          DataSnapshot datasnapshot,
-          Animation<double> animation,
-          int index,
-        ) {
-          final alerts = Map<String, dynamic>.from(
-            datasnapshot.value as Map,
-          );
-          alerts['key'] = datasnapshot.key;
-          return SENDItem(Alerts: alerts);
-        },
+    return Stack(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(bottom: 40, top: 10),
+          padding: const EdgeInsets.only(bottom: 10, top: 10),
+          width: (MediaQuery.of(context).size.width - 100) * 0.25,
+          height: MediaQuery.of(context).size.height * 0.9,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.circular(26),
+          ),
+          child: FirebaseAnimatedList(
+            query: dbrefRM_related_ARM_Offices,
+            itemBuilder:
+                (
+                  BuildContext context,
+                  DataSnapshot datasnapshot,
+                  Animation<double> animation,
+                  int index,
+                ) {
+                  final alerts = Map<String, dynamic>.from(
+                    datasnapshot.value as Map,
+                  );
+                  alerts['key'] = datasnapshot.key;
+                  return SENDItem(Alerts: alerts, index: index);
+                },
+          ),
+        ),
+        if (_isLoading)
+          // Global single loader
+          Positioned.fill(
+            child: Container(
+              color: const Color.fromARGB(0, 0, 0, 0),
+              child: const Center(
+                child: CupertinoActivityIndicator(
+                  radius: 15,
+                  color: Color(0xFFB1AFFF),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// Animated card wrapper with fall + fade
+class _AnimatedSendCard extends StatefulWidget {
+  final Map alerts;
+  final bool isActive;
+  final VoidCallback onSelect;
+  final Duration delay;
+  final VoidCallback onAnimationStart;
+
+  const _AnimatedSendCard({
+    Key? key,
+    required this.alerts,
+    required this.isActive,
+    required this.onSelect,
+    required this.delay,
+    required this.onAnimationStart,
+  }) : super(key: key);
+
+  @override
+  State<_AnimatedSendCard> createState() => _AnimatedSendCardState();
+}
+
+class _AnimatedSendCardState extends State<_AnimatedSendCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+  late Animation<double> _fadeAnimation;
+  bool _visible = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 900), // natural fall
+      vsync: this,
+    );
+
+    _offsetAnimation = Tween<Offset>(
+      begin: const Offset(0, -1.2),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+
+    Future.delayed(widget.delay, () {
+      if (mounted) {
+        widget.onAnimationStart(); // notify parent to hide loader
+        setState(() => _visible = true);
+        _controller.forward();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_visible) {
+      return const SizedBox.shrink(); // nothing while waiting
+    }
+
+    return SlideTransition(
+      position: _offsetAnimation,
+      child: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SendCard(
+          alerts: widget.alerts,
+          isActive: widget.isActive,
+          onSelect: widget.onSelect,
+        ),
       ),
     );
   }
 }
 
-/// 🔹 Separate Stateful Card Widget for hover animation + modern UI
+/// SendCard remains unchanged
 class SendCard extends StatefulWidget {
   final Map alerts;
   final bool isActive;
@@ -163,7 +269,6 @@ class _SendCardState extends State<SendCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 🔹 Title Row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -199,10 +304,7 @@ class _SendCardState extends State<SendCard> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 12),
-
-                // 🔹 Serial Number
                 Text(
                   "Serial Number: ${widget.alerts['Serial Number']}",
                   style: TextStyle(

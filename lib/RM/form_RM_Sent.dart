@@ -83,19 +83,7 @@ class _Sent_Form_RMState extends State<Sent_Form_RM_new> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    CircleAvatar(
-                      radius: 24,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.account_circle_rounded,
-                        color: Color(0xFF6C63FF),
-                        size: 40,
-                      ),
-                    ),
-                    Spacer(),
-                    _HoverPrintButton(),
-                  ],
+                  children: const [Spacer(), _HoverPrintButton()],
                 ),
                 const SizedBox(height: 20),
                 Text(
@@ -218,18 +206,19 @@ class _SequentialDropCardState extends State<_SequentialDropCard>
   @override
   void didUpdateWidget(covariant _SequentialDropCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.value != widget.value) {
-      // Reset visibility for new data
-      _controller.reset();
-      setState(() => _visible = false);
+    _controller.reset();
+    setState(() => _visible = false);
 
-      Future.delayed(widget.delay, () {
-        if (mounted) {
-          setState(() => _visible = true);
-          _controller.forward();
-        }
-      });
-    }
+    Future.delayed(widget.delay, () {
+      if (mounted) {
+        setState(() => _visible = true);
+        _controller.forward();
+      }
+    });
+    // if (oldWidget.value != widget.value) {
+    //   // Reset visibility for new data
+
+    // }
   }
 
   @override
