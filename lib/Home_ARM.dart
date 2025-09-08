@@ -130,7 +130,7 @@ class _Home_ARMState extends State<Home_ARM> {
                     width: (MediaQuery.of(context).size.width - 100) * 0.52,
                     height: MediaQuery.of(context).size.height * 0.9,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
+                      color: const Color.fromARGB(0, 255, 255, 255),
                       borderRadius: BorderRadius.circular(26),
                     ),
                     child: DetailPanel_ARM(

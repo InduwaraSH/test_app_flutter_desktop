@@ -1,13 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_code/ARM_SelectProvider.dart';
-import 'package:test_code/Home.dart';
 import 'package:test_code/RM_sent_provide.dart';
-import 'package:test_code/firstpage.dart';
 import 'package:test_code/selected_provider.dart';
 
 class middle_ARM_create extends StatefulWidget {
@@ -29,187 +25,367 @@ class _homeState extends State<middle_ARM_create> {
   String? selectedBranch;
   String branchName = "Galle";
 
+  bool _isLoading = true;
+  List<Map<String, dynamic>> items = [];
+  final ScrollController _scrollController = ScrollController();
+
+  late DatabaseReference dbRef;
+
   @override
   void initState() {
     super.initState();
     location = widget.location;
     position = widget.position;
-
     selectedBranch = branchName;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Provider.of<ARM_Selection_provider>(
-      //   context,
-      //   listen: false,
-      // ).setSelected(branchName);
 
-      Provider.of<ARM_Selection_provider>(
-        context,
-        listen: false,
-      ).setSelected(branchName);
-    });
+    dbRef = FirebaseDatabase.instance
+        .ref()
+        .child("ARM_branch_data_saved")
+        .child(location)
+        .child("Recived");
 
-    // Provider.of<ARM_Selection_provider>(
-    //       context,
-    //       listen: false,
-    //     ).setSelected(branchName);
+    loadData();
   }
 
-  late Query dbrefRM_related_ARM_Offices = FirebaseDatabase.instance
-      .ref()
-      .child("ARM_branch_data_saved")
-      .child(location)
-      .child("Recived");
+  Future<void> loadData() async {
+    final snapshot = await dbRef.get();
+    if (snapshot.exists) {
+      final List<Map<String, dynamic>> temp = [];
+      snapshot.children.forEach((child) {
+        final data = Map<String, dynamic>.from(child.value as Map);
+        data['key'] = child.key;
+        temp.add(data);
+      });
 
-  // 🔹 Branch Container Widget (Clickable)
-  Widget branchItem({
-    required String branchName,
-    required Map branchData,
-    required String letterNo,
-    required String dateInformed,
-    required String placeOfCoupe,
-    required String serialNumber,
-  }) {
-    bool isActive = selectedBranch == branchName;
+      setState(() {
+        items = temp.reversed.toList(); // Last saved first
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
-    Color bgColor = isActive
-        ? Color.fromRGBO(104, 127, 229, 1)
-        : const Color.fromRGBO(222, 236, 255, 1);
-    Color textColor = isActive
-        ? Colors.white
-        : Color.fromRGBO(104, 127, 229, 1);
-    Color borderColor = isActive
-        ? Color.fromRGBO(104, 127, 229, 1)
-        : const Color.fromRGBO(222, 236, 255, 1);
-    return GestureDetector(
-      onTap: () {
+  Widget branchItem({required Map branchData, required int index}) {
+    return _AnimatedSendCard(
+      alerts: branchData,
+      isActive: selectedBranch == branchData['Serial Number'],
+      onSelect: () {
         setState(() {
-          selectedBranch = branchName;
+          selectedBranch = branchData['Serial Number'];
         });
 
         final rmSent = Provider.of<RM_Sent>(context, listen: false);
-
-        rmSent.setSNum(serialNumber);
-        rmSent.setPOC(placeOfCoupe);
-        rmSent.setLetterNo(letterNo); // if exists in DB
-        rmSent.setDateInformed(dateInformed); // if exists in DB
-        rmSent.setARMBranchName(branchName); // if exists in DB
+        rmSent.setSNum(branchData['Serial Number']?.toString() ?? '');
+        rmSent.setPOC(branchData['placeOfCoupe']?.toString() ?? '');
+        rmSent.setLetterNo(branchData['LetterNo']?.toString() ?? '');
+        rmSent.setDateInformed(branchData['DateInformed']?.toString() ?? '');
+        rmSent.setARMBranchName(
+          branchData['ARM_Branch_Name']?.toString() ?? '',
+        );
         rmSent.setSelected(true);
       },
-
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.all(12),
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: borderColor, width: 2),
-          boxShadow: [
-            BoxShadow(
-              color: isActive
-                  ? Color.fromRGBO(104, 127, 229, 1)
-                  : Colors.grey.withOpacity(0.3),
-              blurRadius: isActive ? 15 : 6,
-              spreadRadius: isActive ? 2 : 0,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  placeOfCoupe, // Galle / Matara
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'sfproRoundSemiB',
-                    color: textColor,
-                  ),
-                ),
-                Icon(Icons.apartment, color: textColor),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "Date informed: ${branchData['DateInformed']}",
-              style: TextStyle(
-                fontSize: 12,
-                fontFamily: 'sfproRoundSemiB',
-                fontWeight: FontWeight.w400,
-                color: textColor,
-              ),
-            ),
-          ],
-        ),
-      ),
+      delay: Duration(milliseconds: 80 * index),
+      onAnimationStart: () {},
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(bottom: 40, top: 10),
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
-            width: (MediaQuery.of(context).size.width - 100) * 0.25,
-            height: MediaQuery.of(context).size.height * 0.9,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              borderRadius: BorderRadius.circular(26),
-            ),
-            child: FirebaseAnimatedList(
-              query: dbrefRM_related_ARM_Offices,
-              itemBuilder:
-                  (
-                    BuildContext context,
-                    DataSnapshot datasnapshot,
-                    Animation<double> animation,
-                    int index,
-                  ) {
-                    if (datasnapshot.value == null) {
-                      return const SizedBox();
-                    }
-
-                    Map branchData = Map<String, dynamic>.from(
-                      datasnapshot.value as Map,
-                    );
-                    String branchName =
-                        datasnapshot['Serial Number']?.toString() ?? "Unknown";
-                    String LetterNo =
-                        datasnapshot['LetterNo']?.toString() ?? "Unknown";
-                    String DateInformed =
-                        datasnapshot['DateInformed']?.toString() ?? "Unknown";
-                    String placeOfCoupe =
-                        datasnapshot['placeOfCoupe']?.toString() ?? "Unknown";
-                    String SerialNumber =
-                        datasnapshot['Serial Number']?.toString() ?? "Unknown";
-
-                    return branchItem(
-                      branchName: branchName,
-                      branchData: branchData,
-                      letterNo: LetterNo,
-                      dateInformed: DateInformed,
-                      placeOfCoupe: placeOfCoupe,
-                      serialNumber: SerialNumber,
-                    );
-                  },
+    return Stack(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(bottom: 40, top: 10),
+          padding: const EdgeInsets.only(bottom: 10, top: 10),
+          width: (MediaQuery.of(context).size.width - 100) * 0.25,
+          height: MediaQuery.of(context).size.height * 0.9,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.circular(26),
+          ),
+          child: _isLoading
+              ? const SizedBox.shrink()
+              : ScrollConfiguration(
+                  behavior: const ScrollBehavior().copyWith(overscroll: false),
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      final branchData = items[index];
+                      return branchItem(branchData: branchData, index: index);
+                    },
+                  ),
+                ),
+        ),
+        if (_isLoading)
+          Positioned.fill(
+            child: Container(
+              color: Colors.transparent,
+              child: const Center(
+                child: CupertinoActivityIndicator(
+                  radius: 15,
+                  color: Color(0xFF687FE5), // same as RM loader
+                ),
+              ),
             ),
           ),
-        ],
+      ],
+    );
+  }
+}
+
+/// 🔹 Drop + Fade Animated Card Wrapper
+class _AnimatedSendCard extends StatefulWidget {
+  final Map alerts;
+  final bool isActive;
+  final VoidCallback onSelect;
+  final Duration delay;
+  final VoidCallback onAnimationStart;
+
+  const _AnimatedSendCard({
+    Key? key,
+    required this.alerts,
+    required this.isActive,
+    required this.onSelect,
+    required this.delay,
+    required this.onAnimationStart,
+  }) : super(key: key);
+
+  @override
+  State<_AnimatedSendCard> createState() => _AnimatedSendCardState();
+}
+
+class _AnimatedSendCardState extends State<_AnimatedSendCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+  late Animation<double> _fadeAnimation;
+  bool _visible = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 900),
+      vsync: this,
+    );
+
+    _offsetAnimation = Tween<Offset>(
+      begin: const Offset(0, 1.2),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+
+    Future.delayed(widget.delay, () {
+      if (mounted) {
+        widget.onAnimationStart();
+        setState(() => _visible = true);
+        _controller.forward();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_visible) return const SizedBox.shrink();
+
+    return SlideTransition(
+      position: _offsetAnimation,
+      child: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SendCard(
+          alerts: widget.alerts,
+          isActive: widget.isActive,
+          onSelect: widget.onSelect,
+        ),
       ),
     );
   }
 }
 
-extension on DataSnapshot {
-  dynamic operator [](String key) {
-    return (value as Map)[key];
+/// 🔹 SendCard (same color style as BranchCard in RM)
+class SendCard extends StatefulWidget {
+  final Map alerts;
+  final bool isActive;
+  final VoidCallback onSelect;
+
+  const SendCard({
+    super.key,
+    required this.alerts,
+    required this.isActive,
+    required this.onSelect,
+  });
+
+  @override
+  State<SendCard> createState() => _SendCardState();
+}
+
+class _SendCardState extends State<SendCard>
+    with SingleTickerProviderStateMixin {
+  bool isHovered = false;
+
+  late ColorTween color1Tween;
+  late ColorTween color2Tween;
+  late AnimationController gradientController;
+  late Animation<Color?> color1Animation;
+  late Animation<Color?> color2Animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    color1Tween = ColorTween(
+      begin: const Color(0xFFE2ECFF),
+      end: const Color(0xFF687FE5),
+    );
+    color2Tween = ColorTween(
+      begin: const Color(0xFFD6E4FA),
+      end: const Color(0xFF5065D8),
+    );
+
+    gradientController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+
+    color1Animation = color1Tween.animate(gradientController);
+    color2Animation = color2Tween.animate(gradientController);
+
+    if (widget.isActive) {
+      gradientController.forward();
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant SendCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isActive != oldWidget.isActive) {
+      if (widget.isActive) {
+        gradientController.forward();
+      } else {
+        gradientController.reverse();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    gradientController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => isHovered = true),
+      onExit: (_) => setState(() => isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onSelect,
+        child: AnimatedScale(
+          scale: isHovered ? 1.05 : 1.0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          child: AnimatedBuilder(
+            animation: gradientController,
+            builder: (context, child) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 16,
+                ),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [color1Animation.value!, color2Animation.value!],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: widget.isActive
+                          ? const Color(0xFF687FE5).withOpacity(0.5)
+                          : Colors.black12,
+                      blurRadius: isHovered ? 20 : 10,
+                      spreadRadius: isHovered ? 2 : 0,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// Top row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            widget.alerts["placeOfCoupe"] ?? "Unknown",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'sfproRoundSemiB',
+                              color: widget.isActive
+                                  ? Colors.white
+                                  : const Color(0xFF5065D8),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: widget.isActive
+                                ? Colors.white.withOpacity(0.2)
+                                : const Color(0xFF5065D8).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            Icons.apartment_rounded,
+                            size: 22,
+                            color: widget.isActive
+                                ? Colors.white
+                                : const Color(0xFF5065D8),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+
+                    /// Serial Number
+                    Text(
+                      "Serial Number: ${widget.alerts['Serial Number'] ?? 'Unknown'}",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'sfproRoundSemiB',
+                        fontWeight: FontWeight.w400,
+                        color: widget.isActive
+                            ? Colors.white.withOpacity(0.9)
+                            : const Color(0xFF5065D8),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
   }
 }
