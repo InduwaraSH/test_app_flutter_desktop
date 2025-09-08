@@ -1,5 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +24,11 @@ class _homeState extends State<middle_RM_Send_new> {
   String? selectedBranch;
   String branchName = "";
 
-  bool _isLoading = true; // global loader
+  bool _isLoading = true;
+  List<Map<String, dynamic>> items = [];
+  final ScrollController _scrollController = ScrollController();
+
+  late DatabaseReference dbRef;
 
   @override
   void initState() {
@@ -33,13 +36,36 @@ class _homeState extends State<middle_RM_Send_new> {
     location = widget.location;
     position = widget.position;
     selectedBranch = branchName;
+
+    dbRef = FirebaseDatabase.instance
+        .ref()
+        .child("RM_branch_data_saved")
+        .child(location)
+        .child("Sent");
+
+    loadData();
   }
 
-  late Query dbrefRM_related_ARM_Offices = FirebaseDatabase.instance
-      .ref()
-      .child("RM_branch_data_saved")
-      .child(location)
-      .child("Sent");
+  Future<void> loadData() async {
+    final snapshot = await dbRef.get();
+    if (snapshot.exists) {
+      final List<Map<String, dynamic>> temp = [];
+      snapshot.children.forEach((child) {
+        final data = Map<String, dynamic>.from(child.value as Map);
+        data['key'] = child.key;
+        temp.add(data);
+      });
+
+      setState(() {
+        items = temp.reversed.toList(); // Last saved first
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   Widget SENDItem({required Map Alerts, required int index}) {
     return _AnimatedSendCard(
@@ -60,14 +86,7 @@ class _homeState extends State<middle_RM_Send_new> {
         rmSent.setSelected(true);
       },
       delay: Duration(milliseconds: 80 * index),
-      onAnimationStart: () {
-        // First card started animation, hide loader
-        if (_isLoading && mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      },
+      onAnimationStart: () {},
     );
   }
 
@@ -84,25 +103,22 @@ class _homeState extends State<middle_RM_Send_new> {
             color: Theme.of(context).colorScheme.primary,
             borderRadius: BorderRadius.circular(26),
           ),
-          child: FirebaseAnimatedList(
-            query: dbrefRM_related_ARM_Offices,
-            itemBuilder:
-                (
-                  BuildContext context,
-                  DataSnapshot datasnapshot,
-                  Animation<double> animation,
-                  int index,
-                ) {
-                  final alerts = Map<String, dynamic>.from(
-                    datasnapshot.value as Map,
-                  );
-                  alerts['key'] = datasnapshot.key;
-                  return SENDItem(Alerts: alerts, index: index);
-                },
-          ),
+          child: _isLoading
+              ? const SizedBox.shrink()
+              : ScrollConfiguration(
+                  behavior: const ScrollBehavior().copyWith(overscroll: false),
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      final alerts = items[index];
+                      return SENDItem(Alerts: alerts, index: index);
+                    },
+                  ),
+                ),
         ),
         if (_isLoading)
-          // Global single loader
           Positioned.fill(
             child: Container(
               color: const Color.fromARGB(0, 0, 0, 0),
@@ -119,7 +135,7 @@ class _homeState extends State<middle_RM_Send_new> {
   }
 }
 
-/// Animated card wrapper with fall + fade
+/// Animated card wrapper with bottom-to-top drop + fade
 class _AnimatedSendCard extends StatefulWidget {
   final Map alerts;
   final bool isActive;
@@ -152,12 +168,12 @@ class _AnimatedSendCardState extends State<_AnimatedSendCard>
     super.initState();
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 900), // natural fall
+      duration: const Duration(milliseconds: 900),
       vsync: this,
     );
 
     _offsetAnimation = Tween<Offset>(
-      begin: const Offset(0, -1.2),
+      begin: const Offset(0, 1.2),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
@@ -168,7 +184,7 @@ class _AnimatedSendCardState extends State<_AnimatedSendCard>
 
     Future.delayed(widget.delay, () {
       if (mounted) {
-        widget.onAnimationStart(); // notify parent to hide loader
+        widget.onAnimationStart();
         setState(() => _visible = true);
         _controller.forward();
       }
@@ -183,9 +199,7 @@ class _AnimatedSendCardState extends State<_AnimatedSendCard>
 
   @override
   Widget build(BuildContext context) {
-    if (!_visible) {
-      return const SizedBox.shrink(); // nothing while waiting
-    }
+    if (!_visible) return const SizedBox.shrink();
 
     return SlideTransition(
       position: _offsetAnimation,
@@ -201,7 +215,7 @@ class _AnimatedSendCardState extends State<_AnimatedSendCard>
   }
 }
 
-/// SendCard remains unchanged
+/// SendCard UI
 class SendCard extends StatefulWidget {
   final Map alerts;
   final bool isActive;

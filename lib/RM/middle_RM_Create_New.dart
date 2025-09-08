@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +28,7 @@ class _homeState extends State<middle_RM_create_new> {
   String branchName = "Galle";
 
   bool _isLoading = true; // loader flag
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _homeState extends State<middle_RM_create_new> {
     });
   }
 
-  late Query dbrefRM_related_ARM_Offices = FirebaseDatabase.instance
+  late DatabaseReference dbrefRM_related_ARM_Offices = FirebaseDatabase.instance
       .ref()
       .child("Connection RM_ARM")
       .child(location);
@@ -97,23 +97,27 @@ class _homeState extends State<middle_RM_create_new> {
             color: Theme.of(context).colorScheme.primary,
             borderRadius: BorderRadius.circular(26),
           ),
-          child: FirebaseAnimatedList(
-            query: dbrefRM_related_ARM_Offices,
-            itemBuilder:
-                (
-                  BuildContext context,
-                  DataSnapshot datasnapshot,
-                  Animation<double> animation,
-                  int index,
-                ) {
-                  if (datasnapshot.value == null) {
-                    return const SizedBox();
-                  }
+          child: StreamBuilder<DatabaseEvent>(
+            stream: dbrefRM_related_ARM_Offices.onValue,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData || snapshot.data!.snapshot.value == null) {
+                return const Center(child: Text("No Branches Found"));
+              }
 
+              Map data = Map<String, dynamic>.from(
+                snapshot.data!.snapshot.value as Map,
+              );
+
+              List<MapEntry> entries = data.entries.toList();
+
+              return ListView.builder(
+                controller: _scrollController,
+                itemCount: entries.length,
+                itemBuilder: (context, index) {
+                  String branchName = entries[index].key;
                   Map branchData = Map<String, dynamic>.from(
-                    datasnapshot.value as Map,
+                    entries[index].value,
                   );
-                  String branchName = datasnapshot.key ?? "Unknown";
 
                   return branchItem(
                     branchName: branchName,
@@ -121,6 +125,8 @@ class _homeState extends State<middle_RM_create_new> {
                     index: index,
                   );
                 },
+              );
+            },
           ),
         ),
         if (_isLoading)

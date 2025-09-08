@@ -72,7 +72,7 @@ class _Sent_Form_RMState extends State<Sent_Form_RM_new> {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F2FA),
+      //backgroundColor: const Color(0xFFF4F2FA),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
