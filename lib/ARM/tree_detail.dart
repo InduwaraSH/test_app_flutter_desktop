@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class TreeQuesForm extends StatefulWidget {
@@ -95,11 +96,30 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
 
   void _cancel() => Navigator.pop(context);
 
-  void _save() {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("Saved successfully!")));
-    Navigator.pop(context);
+  void _save() async {
+    final database = FirebaseDatabase.instance.ref();
+
+    // Collect all tree data
+    List<Map<String, String>> allTrees = [];
+    for (var tree in treeControllers) {
+      Map<String, String> treeData = {};
+      for (var field in fields) {
+        treeData[field] = tree[field]!.text.trim();
+      }
+      allTrees.add(treeData);
+    }
+
+    try {
+      await database.child('trees').push().set(allTrees);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Saved to Firebase successfully!")),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Failed to save: $e")));
+    }
   }
 
   @override
