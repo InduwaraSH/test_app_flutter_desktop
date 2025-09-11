@@ -1,6 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_code/ARM/tree_detail.dart';
 import 'package:test_code/ARM_SelectProvider.dart';
 import 'package:test_code/dateTime.dart';
 import 'package:test_code/send_button.dart';
@@ -31,7 +33,7 @@ class form_ARM_Create extends StatefulWidget {
 }
 
 class _form_ARM_CreateState extends State<form_ARM_Create> {
-  final SerialNumberController = TextEditingController();
+  final SectionNumberController = TextEditingController();
   final PlaceOfCoupeController = TextEditingController();
   final LetterNoController = TextEditingController();
   final ConditionController = TextEditingController();
@@ -69,7 +71,7 @@ class _form_ARM_CreateState extends State<form_ARM_Create> {
     final fields = [
       {
         "label": "දැව භාරදුන් ආයතනය හා කොට්ඨාසය",
-        "controller": SerialNumberController,
+        "controller": SectionNumberController,
         "placeholder": "Enter Institution & Section",
         "icon": Icons.account_balance_outlined,
       },
@@ -153,7 +155,7 @@ class _form_ARM_CreateState extends State<form_ARM_Create> {
                 ),
                 const SizedBox(width: 10),
                 SendButton_animated(
-                  SerialNumberController,
+                  SectionNumberController,
                   PlaceOfCoupeController,
                   LetterNoController,
                   DateinforemedController,
@@ -182,6 +184,51 @@ class _form_ARM_CreateState extends State<form_ARM_Create> {
                   },
                 );
               }),
+            ),
+            SizedBox(height: 30),
+            CupertinoButton(
+              color: Colors.blueAccent,
+              onPressed: () {
+                if (SectionNumberController.text.isEmpty ||
+                    PlaceOfCoupeController.text.isEmpty ||
+                    LetterNoController.text.isEmpty ||
+                    ConditionController.text.isEmpty ||
+                    OfficerNameController.text.isEmpty ||
+                    OfficerPositionController.text.isEmpty ||
+                    DateinforemedController.text.isEmpty ||
+                    TreeCountController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Please fill all the fields'),
+                      duration: Duration(seconds: 2),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                } else {
+                  int treeCount = int.tryParse(TreeCountController.text) ?? 0;
+                  if (treeCount > 0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            TreeQuesForm(treeCount: treeCount),
+                      ),
+                    );
+                  }
+                }
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Next",
+                    style: TextStyle(fontFamily: 'sfpro', color: Colors.white),
+                  ),
+                  SizedBox(width: 8),
+                  Icon(Icons.double_arrow, color: Colors.white),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
           ],
@@ -304,6 +351,7 @@ class _SequentialDropCardFieldState extends State<_SequentialDropCardField>
                     color: Colors.black,
                   ),
                 ),
+
                 const SizedBox(height: 8),
                 widget.isDate
                     ? SimpleDatePicker(
@@ -314,6 +362,11 @@ class _SequentialDropCardFieldState extends State<_SequentialDropCardField>
                         controller: widget.controller,
                         decoration: InputDecoration(
                           hintText: widget.placeholder ?? "",
+                          hintStyle: const TextStyle(
+                            color: Colors.grey, // light gray hint
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "AbhayaLibre",
+                          ),
                           border: InputBorder.none,
                         ),
                         style: const TextStyle(
@@ -322,6 +375,9 @@ class _SequentialDropCardFieldState extends State<_SequentialDropCardField>
                           color: Colors.black,
                           fontFamily: "AbhayaLibre",
                         ),
+                        showCursor: true, // cursor visible
+                        cursorColor: Colors.black,
+                        cursorHeight: 22, // optional
                       ),
               ],
             ),

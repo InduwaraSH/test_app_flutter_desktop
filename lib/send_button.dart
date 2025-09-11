@@ -107,6 +107,19 @@ class _SendButton_animatedState extends State<SendButton_animated> {
                     .push()
                     .set(reqData);
               })
+              .then((_) async {
+                DatabaseReference dbref = FirebaseDatabase.instance
+                    .ref()
+                    .child("Ongoing_Count")
+                    .child(location)
+                    .child("ongoing");
+
+                await dbref.runTransaction((currentData) {
+                  int currentValue =
+                      (currentData as int?) ?? 0; // if not exist → 0
+                  return Transaction.success(currentValue + 1);
+                });
+              })
               .then((_) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

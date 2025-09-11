@@ -30,6 +30,7 @@ class _homeState extends State<middle_ARM_create> {
   final ScrollController _scrollController = ScrollController();
 
   late DatabaseReference dbRef;
+  Stream<DatabaseEvent>? _stream;
 
   @override
   void initState() {
@@ -44,28 +45,30 @@ class _homeState extends State<middle_ARM_create> {
         .child(location)
         .child("Recived");
 
-    loadData();
+    _listenToData();
   }
 
-  Future<void> loadData() async {
-    final snapshot = await dbRef.get();
-    if (snapshot.exists) {
-      final List<Map<String, dynamic>> temp = [];
-      snapshot.children.forEach((child) {
-        final data = Map<String, dynamic>.from(child.value as Map);
-        data['key'] = child.key;
-        temp.add(data);
-      });
-
-      setState(() {
-        items = temp.reversed.toList(); // Last saved first
-        _isLoading = false;
-      });
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+  void _listenToData() {
+    _stream = dbRef.onValue;
+    _stream!.listen((event) {
+      if (event.snapshot.exists) {
+        final List<Map<String, dynamic>> temp = [];
+        for (var child in event.snapshot.children) {
+          final data = Map<String, dynamic>.from(child.value as Map);
+          data['key'] = child.key;
+          temp.add(data);
+        }
+        setState(() {
+          items = temp.reversed.toList(); // newest first
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          items = [];
+          _isLoading = false;
+        });
+      }
+    });
   }
 
   Widget branchItem({required Map branchData, required int index}) {
@@ -127,7 +130,7 @@ class _homeState extends State<middle_ARM_create> {
               child: const Center(
                 child: CupertinoActivityIndicator(
                   radius: 15,
-                  color: Color(0xFF687FE5), // same as RM loader
+                  color: Color(0xFF687FE5), // loader color
                 ),
               ),
             ),
@@ -217,7 +220,7 @@ class _AnimatedSendCardState extends State<_AnimatedSendCard>
   }
 }
 
-/// 🔹 SendCard (same color style as BranchCard in RM)
+/// 🔹 SendCard
 class SendCard extends StatefulWidget {
   final Map alerts;
   final bool isActive;

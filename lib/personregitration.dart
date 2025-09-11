@@ -36,6 +36,10 @@ class _PersonRegistrationPageState extends State<PersonRegistrationPage> {
     'Trinco',
     'Walasmulla',
     'Negombo',
+    'Rathnapura',
+    'Kegalle',
+    'Anuradhapura',
+    'Polonnaruwa',
   ];
 
   @override

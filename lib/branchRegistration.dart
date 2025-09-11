@@ -37,6 +37,10 @@ class _BranchRegistrationState extends State<BranchRegistration> {
     'Trinco',
     'Walasmulla',
     'Negombo',
+    'Anuradhapura',
+    'polonnaruwa',
+    'Rathnapura',
+    'kegalle',
   ];
 
   @override
