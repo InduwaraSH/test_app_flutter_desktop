@@ -23,6 +23,8 @@ class _ReviewPageState extends State<ReviewPage>
   late AnimationController _controller;
   late Animation<double> _animation;
 
+  int _hoveredIndex = -1; // track hovered row
+
   @override
   void initState() {
     super.initState();
@@ -44,10 +46,10 @@ class _ReviewPageState extends State<ReviewPage>
   }
 
   IconData _getIconForField(String field) {
-    if (field.contains("වර්ගය")) return Icons.person; // example: name
-    if (field.contains("පරමිතිය")) return Icons.science; // science/chemistry
-    if (field.contains("උස")) return Icons.height; // height
-    if (field.contains("මානමය උස")) return Icons.straighten; // measurement
+    if (field.contains("වර්ගය")) return Icons.person;
+    if (field.contains("පරමිතිය")) return Icons.science;
+    if (field.contains("උස")) return Icons.height;
+    if (field.contains("මානමය උස")) return Icons.straighten;
     return Icons.notes;
   }
 
@@ -151,58 +153,104 @@ class _ReviewPageState extends State<ReviewPage>
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 16),
 
-                        // Field values
-                        ...widget.fields.map((f) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Row(
-                              children: [
-                                // Icon
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.08),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  padding: const EdgeInsets.all(10),
-                                  child: Icon(
-                                    _getIconForField(f),
-                                    color: Colors.black,
-                                    size: 22,
-                                  ),
+                        // Field values with mini cards
+                        ...widget.fields.asMap().entries.map((entry) {
+                          int fieldIndex = entry.key;
+                          String f = entry.value;
+                          return MouseRegion(
+                            onEnter: (_) {
+                              setState(() => _hoveredIndex = fieldIndex);
+                            },
+                            onExit: (_) {
+                              setState(() => _hoveredIndex = -1);
+                            },
+                            child: AnimatedScale(
+                              scale: _hoveredIndex == fieldIndex ? 1.02 : 1.0,
+                              duration: const Duration(milliseconds: 200),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                margin: const EdgeInsets.symmetric(
+                                  vertical: 6.0,
                                 ),
-                                const SizedBox(width: 12),
-
-                                // Field name
-                                Expanded(
-                                  flex: 3,
-                                  child: Text(
-                                    f,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black54,
-                                      fontSize: 15,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                  horizontal: 16,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: _hoveredIndex == fieldIndex
+                                      ? Colors.blueAccent.withOpacity(0.1)
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(14),
+                                  boxShadow: _hoveredIndex == fieldIndex
+                                      ? [
+                                          BoxShadow(
+                                            color: Colors.blueAccent
+                                                .withOpacity(0.2),
+                                            blurRadius: 12,
+                                            offset: const Offset(0, 6),
+                                          ),
+                                        ]
+                                      : [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(
+                                              0.03,
+                                            ),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                        ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    // Icon
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.08),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      padding: const EdgeInsets.all(8),
+                                      child: Icon(
+                                        _getIconForField(f),
+                                        color: Colors.black,
+                                        size: 22,
+                                      ),
                                     ),
-                                  ),
-                                ),
+                                    const SizedBox(width: 12),
 
-                                // Field value
-                                Expanded(
-                                  flex: 5,
-                                  child: Text(
-                                    widget.treeControllers[index][f]!.text
-                                        .trim(),
-                                    textAlign: TextAlign.right,
-                                    style: const TextStyle(
-                                      fontFamily: "AbhayaLibre",
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      color: Colors.black87,
+                                    // Field name
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        f,
+                                        style: const TextStyle(
+                                          fontFamily: "abhayaLibre",
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                          fontSize: 20,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+
+                                    // Field value
+                                    Expanded(
+                                      flex: 5,
+                                      child: Text(
+                                        widget.treeControllers[index][f]!.text
+                                            .trim(),
+                                        textAlign: TextAlign.right,
+                                        style: const TextStyle(
+                                          fontFamily: "AbhayaLibre",
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           );
                         }),

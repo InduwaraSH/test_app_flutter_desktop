@@ -171,10 +171,42 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
 
     try {
       await database.child('trees').push().set(allTrees);
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Saved to Firebase successfully!")),
+        const SnackBar(
+          content: Text("Saved to Firebase successfully!"),
+          duration: Duration(seconds: 1),
+        ),
       );
-      Navigator.pop(context);
+
+      // Delay a bit so user can see the SnackBar
+      await Future.delayed(const Duration(milliseconds: 800));
+
+      // Animate closing the review dialog
+      Navigator.pop(context); // closes ReviewPage dialog
+
+      // Animate closing TreeQuesForm with fade/slide
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) =>
+              Container(), // just replace with empty page
+          opaque: false,
+          transitionsBuilder: (_, animation, __, child) {
+            const begin = Offset(0, 0);
+            const end = Offset(0, 1); // slide down
+            const curve = Curves.easeInOutCubic;
+            var tween = Tween(
+              begin: begin,
+              end: end,
+            ).chain(CurveTween(curve: curve));
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
+      );
     } catch (e) {
       ScaffoldMessenger.of(
         context,
