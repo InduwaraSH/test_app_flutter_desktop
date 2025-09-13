@@ -4,8 +4,29 @@ import 'package:test_code/ARM/reviewBeforeARMCreate.dart';
 
 class TreeQuesForm extends StatefulWidget {
   final int treeCount;
+  final String sectionNumber;
+  final String PlaceOfCoupe;
+  final String LetterNo;
+  final String Condition;
+  final String OfficerName;
+  final String OfficerPosition;
+  final String Dateinforemed;
+  final String location;
+  final String position;
 
-  const TreeQuesForm({super.key, required this.treeCount});
+  const TreeQuesForm({
+    super.key,
+    required this.treeCount,
+    required this.sectionNumber,
+    required this.PlaceOfCoupe,
+    required this.LetterNo,
+    required this.Condition,
+    required this.OfficerName,
+    required this.OfficerPosition,
+    required this.Dateinforemed,
+    required this.location,
+    required this.position,
+  });
 
   @override
   State<TreeQuesForm> createState() => _TreeQuesFormState();
@@ -14,6 +35,16 @@ class TreeQuesForm extends StatefulWidget {
 class _TreeQuesFormState extends State<TreeQuesForm> {
   int currentIndex = 0;
   late PageController _pageController;
+  late String new_sectionNumber;
+  late String PlaceOfCoupe;
+  late String LetterNo;
+  late String Condition;
+  late String OfficerName;
+  late String OfficerPosition;
+  late String Dateinforemed;
+  late String treeCount;
+  late String location;
+  late String position;
 
   final List<String> fields = [
     "ගස් වර්ගය",
@@ -31,11 +62,23 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
   @override
   void initState() {
     super.initState();
+
     _pageController = PageController();
     treeControllers = List.generate(
       widget.treeCount,
       (_) => {for (var f in fields) f: TextEditingController()},
     );
+
+    new_sectionNumber = widget.sectionNumber.toString();
+    PlaceOfCoupe = widget.PlaceOfCoupe;
+    LetterNo = widget.LetterNo;
+    Condition = widget.Condition;
+    OfficerName = widget.OfficerName;
+    OfficerPosition = widget.OfficerPosition;
+    Dateinforemed = widget.Dateinforemed;
+    treeCount = widget.treeCount.toString();
+    location = widget.location;
+    position = widget.position;
   }
 
   @override
@@ -168,10 +211,27 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
       }
       allTrees.add(treeData);
     }
+    Map<String, String> timberReportheadlines = {
+      "doner_details": new_sectionNumber,
+      "PlaceOfCoupe": PlaceOfCoupe,
+      "LetterNo": LetterNo,
+      "Condition": Condition,
+      "OfficerName": OfficerName,
+      "OfficerPosition&name": OfficerPosition,
+      "TreeCount": treeCount,
+      "Date": Dateinforemed,
+      "ARM_location": location,
+    };
 
     try {
-      await database.child('trees').push().set(allTrees);
+      await database.child('trees').child(new_sectionNumber).child("tree_details").set(allTrees);
+      await database
+          .child('trees')
+          .child(new_sectionNumber)
+          .child('timberReportheadlines')
+          .set(timberReportheadlines);
 
+      // Show SnackBar for feedback
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Saved to Firebase successfully!"),
@@ -179,34 +239,14 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
         ),
       );
 
-      // Delay a bit so user can see the SnackBar
+      // Wait a bit so user can see the message
       await Future.delayed(const Duration(milliseconds: 800));
 
-      // Animate closing the review dialog
-      Navigator.pop(context); // closes ReviewPage dialog
+      // Close review dialog
+      Navigator.pop(context);
 
-      // Animate closing TreeQuesForm with fade/slide
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          pageBuilder: (_, __, ___) =>
-              Container(), // just replace with empty page
-          opaque: false,
-          transitionsBuilder: (_, animation, __, child) {
-            const begin = Offset(0, 0);
-            const end = Offset(0, 1); // slide down
-            const curve = Curves.easeInOutCubic;
-            var tween = Tween(
-              begin: begin,
-              end: end,
-            ).chain(CurveTween(curve: curve));
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 400),
-        ),
-      );
+      // Close TreeQuesForm page (pop from root navigator, so correct page is closed)
+      Navigator.of(context, rootNavigator: true).pop();
     } catch (e) {
       ScaffoldMessenger.of(
         context,
