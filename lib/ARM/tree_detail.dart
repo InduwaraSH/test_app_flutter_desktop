@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:test_code/ARM/reviewBeforeARMCreate.dart';
 
 class TreeQuesForm extends StatefulWidget {
   final int treeCount;
@@ -48,6 +49,64 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
     super.dispose();
   }
 
+  void _review() {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false, // keeps background visible (like dialog)
+        barrierDismissible: false,
+        pageBuilder: (_, __, ___) {
+          return Center(
+            child: Dialog(
+              insetPadding: const EdgeInsets.all(20),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                height: MediaQuery.of(context).size.height * 0.9,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: ReviewPage(
+                  fields: fields,
+                  treeControllers: treeControllers,
+                  onEdit: (index) {
+                    Navigator.pop(context); // close dialog
+                    setState(() {
+                      currentIndex = index;
+                    });
+                    _pageController.jumpToPage(index);
+                  },
+                  onConfirm: _save,
+                ),
+              ),
+            ),
+          );
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0.0, 0.1); // slide from bottom
+          const end = Offset.zero;
+          const curve = Curves.easeOutCubic;
+
+          var tween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
+          var fadeTween = Tween<double>(begin: 0, end: 1);
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: FadeTransition(
+              opacity: animation.drive(fadeTween),
+              child: child,
+            ),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 450),
+      ),
+    );
+  }
+
   void _next() {
     final currentFields = treeControllers[currentIndex];
     bool allFilled = true;
@@ -80,7 +139,8 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
         curve: Curves.easeInOutCubic,
       );
     } else {
-      _save();
+      //_save();
+      _review();
     }
   }
 

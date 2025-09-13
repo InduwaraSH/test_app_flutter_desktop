@@ -208,16 +208,31 @@ class _form_ARM_CreateState extends State<form_ARM_Create> {
                 } else {
                   int treeCount = int.tryParse(TreeCountController.text) ?? 0;
                   if (treeCount > 0) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            TreeQuesForm(treeCount: treeCount),
-                      ),
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false, // user must press Cancel/Save
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          insetPadding: EdgeInsets.all(20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            height: MediaQuery.of(context).size.height * 0.9,
+                            child: TreeQuesForm(treeCount: treeCount),
+                          ),
+                        );
+                      },
                     );
                   }
                 }
               },
+
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
