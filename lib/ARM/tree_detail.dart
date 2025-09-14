@@ -13,6 +13,11 @@ class TreeQuesForm extends StatefulWidget {
   final String Dateinforemed;
   final String location;
   final String position;
+  final VoidCallback onDone;
+  final String serialnum;
+  //final String letterno;
+  final String placeofcoupe;
+  final String dateinformed_from_rm;
 
   const TreeQuesForm({
     super.key,
@@ -26,6 +31,11 @@ class TreeQuesForm extends StatefulWidget {
     required this.Dateinforemed,
     required this.location,
     required this.position,
+    required this.onDone,
+    required this.serialnum,
+    //required this.letterno,
+    required this.placeofcoupe,
+    required this.dateinformed_from_rm,
   });
 
   @override
@@ -36,7 +46,7 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
   int currentIndex = 0;
   late PageController _pageController;
   late String new_sectionNumber;
-  late String PlaceOfCoupe;
+  late String PlaceOfCoupe_exact;
   late String LetterNo;
   late String Condition;
   late String OfficerName;
@@ -45,6 +55,10 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
   late String treeCount;
   late String location;
   late String position;
+  late String serialnum;
+  //late String letterno;
+  late String placeofcoupe;
+  late String dateinformed_from_rm;
 
   final List<String> fields = [
     "ගස් වර්ගය",
@@ -70,7 +84,7 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
     );
 
     new_sectionNumber = widget.sectionNumber.toString();
-    PlaceOfCoupe = widget.PlaceOfCoupe;
+    PlaceOfCoupe_exact = widget.PlaceOfCoupe;
     LetterNo = widget.LetterNo;
     Condition = widget.Condition;
     OfficerName = widget.OfficerName;
@@ -79,6 +93,10 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
     treeCount = widget.treeCount.toString();
     location = widget.location;
     position = widget.position;
+    serialnum = widget.serialnum;
+    //letterno = widget.letterno;
+    placeofcoupe = widget.placeofcoupe;
+    dateinformed_from_rm = widget.dateinformed_from_rm;
   }
 
   @override
@@ -113,6 +131,21 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
                 child: ReviewPage(
                   fields: fields,
                   treeControllers: treeControllers,
+                  treeCount: treeCount,
+                  new_sectionNumber: new_sectionNumber,
+                  PlaceOfCoupe: PlaceOfCoupe_exact,
+                  LetterNo: LetterNo,
+                  Condition: Condition,
+                  OfficerName: OfficerName,
+                  OfficerPosition: OfficerPosition,
+                  Dateinforemed: Dateinforemed,
+                  location: location,
+
+                  serialnum: serialnum,
+                  //letterno: letterno,
+                  placeofcoupe: placeofcoupe,
+                  dateinformed_from_rm: dateinformed_from_rm,
+                  position: position,
                   onEdit: (index) {
                     Navigator.pop(context); // close dialog
                     setState(() {
@@ -212,8 +245,12 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
       allTrees.add(treeData);
     }
     Map<String, String> timberReportheadlines = {
+      "serialnum": serialnum,
+      
+      "placeofcoupe": placeofcoupe,
+      "dateinformed_from_rm": dateinformed_from_rm,
       "doner_details": new_sectionNumber,
-      "PlaceOfCoupe": PlaceOfCoupe,
+      "PlaceOfCoupe_exact_from_arm": PlaceOfCoupe_exact,
       "LetterNo": LetterNo,
       "Condition": Condition,
       "OfficerName": OfficerName,
@@ -224,7 +261,11 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
     };
 
     try {
-      await database.child('trees').child(new_sectionNumber).child("tree_details").set(allTrees);
+      await database
+          .child('trees')
+          .child(new_sectionNumber)
+          .child("tree_details")
+          .set(allTrees);
       await database
           .child('trees')
           .child(new_sectionNumber)
@@ -232,6 +273,7 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
           .set(timberReportheadlines);
 
       // Show SnackBar for feedback
+      widget.onDone();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Saved to Firebase successfully!"),

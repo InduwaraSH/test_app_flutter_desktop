@@ -22,10 +22,19 @@ class NoGlowBehavior extends ScrollBehavior {
 class form_ARM_Create extends StatefulWidget {
   final String location;
   final String position;
+  final String serialnum;
+  final String placeofcoupe;
+  final String letterno;
+  final String dateinformed;
+
   const form_ARM_Create({
     super.key,
     required this.location,
     required this.position,
+    required this.serialnum,
+    required this.placeofcoupe,
+    required this.letterno,
+    required this.dateinformed,
   });
 
   @override
@@ -33,7 +42,7 @@ class form_ARM_Create extends StatefulWidget {
 }
 
 class _form_ARM_CreateState extends State<form_ARM_Create> {
-  final SectionNumberController = TextEditingController();
+  final DonorController = TextEditingController();
   final PlaceOfCoupeController = TextEditingController();
   final LetterNoController = TextEditingController();
   final ConditionController = TextEditingController();
@@ -46,12 +55,21 @@ class _form_ARM_CreateState extends State<form_ARM_Create> {
 
   late String location;
   late String position;
+  late String serialnum;
+  late String placeofcoupe;
+  late String letterno;
+  late String dateinformed;
+
 
   @override
   void initState() {
     super.initState();
     location = widget.location;
     position = widget.position;
+    serialnum = widget.serialnum;
+    placeofcoupe = widget.placeofcoupe;
+    letterno = widget.letterno;
+    dateinformed = widget.dateinformed;
 
     final provider = Provider.of<ARM_Selection_provider>(
       context,
@@ -66,12 +84,23 @@ class _form_ARM_CreateState extends State<form_ARM_Create> {
     });
   }
 
+  void _clear() {
+    DonorController.clear();
+    PlaceOfCoupeController.clear();
+    LetterNoController.clear();
+    ConditionController.clear();
+    OfficerNameController.clear();
+    OfficerPositionController.clear();
+    DateinforemedController.clear();
+    TreeCountController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     final fields = [
       {
         "label": "දැව භාරදුන් ආයතනය හා කොට්ඨාසය",
-        "controller": SectionNumberController,
+        "controller": DonorController,
         "placeholder": "Enter Institution & Section",
         "icon": Icons.account_balance_outlined,
       },
@@ -155,7 +184,7 @@ class _form_ARM_CreateState extends State<form_ARM_Create> {
                 ),
                 const SizedBox(width: 10),
                 SendButton_animated(
-                  SectionNumberController,
+                  DonorController,
                   PlaceOfCoupeController,
                   LetterNoController,
                   DateinforemedController,
@@ -189,7 +218,7 @@ class _form_ARM_CreateState extends State<form_ARM_Create> {
             CupertinoButton(
               color: Colors.blueAccent,
               onPressed: () {
-                if (SectionNumberController.text.isEmpty ||
+                if (DonorController.text.isEmpty ||
                     PlaceOfCoupeController.text.isEmpty ||
                     LetterNoController.text.isEmpty ||
                     ConditionController.text.isEmpty ||
@@ -226,7 +255,7 @@ class _form_ARM_CreateState extends State<form_ARM_Create> {
                             height: MediaQuery.of(context).size.height * 0.9,
                             child: TreeQuesForm(
                               treeCount: treeCount,
-                              sectionNumber: SectionNumberController.text,
+                              sectionNumber: DonorController.text,
                               PlaceOfCoupe: PlaceOfCoupeController.text,
                               LetterNo: LetterNoController.text,
                               Condition: ConditionController.text,
@@ -235,6 +264,11 @@ class _form_ARM_CreateState extends State<form_ARM_Create> {
                               Dateinforemed: DateinforemedController.text,
                               location: location,
                               position: position,
+                              serialnum: serialnum,
+                              placeofcoupe: placeofcoupe,
+                              //letterno: letterno,
+                              dateinformed_from_rm: dateinformed,
+                              onDone: _clear,
                             ),
                           ),
                         );

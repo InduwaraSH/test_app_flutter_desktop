@@ -5,6 +5,19 @@ class ReviewPage extends StatefulWidget {
   final List<Map<String, TextEditingController>> treeControllers;
   final Function(int) onEdit;
   final VoidCallback onConfirm;
+  final String treeCount;
+  final String new_sectionNumber;
+  final String PlaceOfCoupe;
+  final String LetterNo;
+  final String Condition;
+  final String OfficerName;
+  final String OfficerPosition;
+  final String Dateinforemed;
+  final String location;
+  final String serialnum;
+  final String dateinformed_from_rm;
+  final String placeofcoupe;
+  final String position;
 
   const ReviewPage({
     super.key,
@@ -12,6 +25,19 @@ class ReviewPage extends StatefulWidget {
     required this.treeControllers,
     required this.onEdit,
     required this.onConfirm,
+    required this.location,
+    required this.treeCount,
+    required this.new_sectionNumber,
+    required this.PlaceOfCoupe,
+    required this.LetterNo,
+    required this.Condition,
+    required this.OfficerName,
+    required this.OfficerPosition,
+    required this.Dateinforemed,
+    required this.serialnum,
+    required this.dateinformed_from_rm,
+    required this.placeofcoupe,
+    required this.position,
   });
 
   @override
@@ -22,11 +48,12 @@ class _ReviewPageState extends State<ReviewPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-
-  int _hoveredIndex = -1; // track hovered row
+  int _hoveredIndex = -1; // hover for tree fields
+  int _hoveredSummary = -1; // hover for summary
 
   @override
   void initState() {
+
     super.initState();
     _controller = AnimationController(
       vsync: this,
@@ -53,258 +80,337 @@ class _ReviewPageState extends State<ReviewPage>
     return Icons.notes;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _animation,
-      child: Column(
-        children: [
-          // Title
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              "Please review the details before saving",
-              style: const TextStyle(
-                fontSize: 25,
-                fontFamily: "sfproRoundSemiB",
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ),
+  Widget _buildSummaryCard() {
+    final infoItems = [
+      {"label": "Serial No", "value": widget.serialnum},
+      {"label": "Date Informed", "value": widget.dateinformed_from_rm},
+      {"label": "Place of Coupe", "value": widget.placeofcoupe},
+      {"label": "Position", "value": widget.position},
+      
+      {"label": "location_office", "value": widget.location},
+      {"label": "Section No", "value": widget.new_sectionNumber},
+      {"label": "Place of Coupe", "value": widget.PlaceOfCoupe},
+      {"label": "Letter No", "value": widget.LetterNo},
+      {"label": "Condition", "value": widget.Condition},
+      {"label": "Officer Name", "value": widget.OfficerName},
+      {"label": "Officer Position", "value": widget.OfficerPosition},
+      {"label": "Date Informed", "value": widget.Dateinforemed},
+      {"label": "Tree Count", "value": widget.treeCount},
+    ];
 
-          // Tree list with smooth scroll
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(20),
-              physics: const BouncingScrollPhysics(),
-              itemCount: widget.treeControllers.length,
-              itemBuilder: (context, index) {
-                return ScaleTransition(
-                  scale: Tween<double>(begin: 0.9, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: _controller,
-                      curve: Interval(
-                        (index / widget.treeControllers.length),
-                        1.0,
-                        curve: Curves.easeOutBack,
-                      ),
-                    ),
+    return ScaleTransition(
+      scale: Tween<double>(begin: 0.9, end: 1.0).animate(_animation),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 400),
+        margin: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Colors.white, Color(0xFFF7F7FF)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: infoItems.asMap().entries.map((entry) {
+            int index = entry.key;
+            var item = entry.value;
+
+            return MouseRegion(
+              onEnter: (_) => setState(() => _hoveredSummary = index),
+              onExit: (_) => setState(() => _hoveredSummary = -1),
+              child: AnimatedScale(
+                scale: _hoveredSummary == index ? 1.02 : 1.0,
+                duration: const Duration(milliseconds: 200),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  margin: const EdgeInsets.symmetric(vertical: 6.0),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                    horizontal: 16,
                   ),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    margin: const EdgeInsets.symmetric(vertical: 12),
-                    padding: const EdgeInsets.all(18),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Colors.white, Color(0xFFF7F7FF)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 15,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Tree title
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                "Tree ${index + 1} of ${widget.treeControllers.length}",
-                                style: const TextStyle(
-                                  fontFamily: "sfproRoundSemiB",
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
+                  decoration: BoxDecoration(
+                    color: _hoveredSummary == index
+                        ? Colors.blueAccent.withOpacity(0.1)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: _hoveredSummary == index
+                        ? [
+                            BoxShadow(
+                              color: Colors.blueAccent.withOpacity(0.2),
+                              blurRadius: 12,
+                              offset: const Offset(0, 6),
                             ),
-                            const Spacer(),
-                            InkWell(
-                              onTap: () => widget.onEdit(index),
-                              borderRadius: BorderRadius.circular(30),
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: const Icon(
-                                  Icons.edit,
-                                  color: Colors.black,
-                                ),
-                              ),
+                          ]
+                        : [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.03),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
                             ),
                           ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          item["label"]!,
+                          style: const TextStyle(
+                            fontFamily: "abhayaLibre",
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
                         ),
-                        const SizedBox(height: 16),
+                      ),
+                      Expanded(
+                        flex: 9,
+                        child: Text(
+                          item["value"]!,
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
+                            fontFamily: "AbhayaLibre",
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
 
-                        // Field values with mini cards
-                        ...widget.fields.asMap().entries.map((entry) {
-                          int fieldIndex = entry.key;
-                          String f = entry.value;
-                          return MouseRegion(
-                            onEnter: (_) {
-                              setState(() => _hoveredIndex = fieldIndex);
-                            },
-                            onExit: (_) {
-                              setState(() => _hoveredIndex = -1);
-                            },
-                            child: AnimatedScale(
-                              scale: _hoveredIndex == fieldIndex ? 1.02 : 1.0,
-                              duration: const Duration(milliseconds: 200),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
-                                margin: const EdgeInsets.symmetric(
-                                  vertical: 6.0,
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 14,
-                                  horizontal: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: _hoveredIndex == fieldIndex
-                                      ? Colors.blueAccent.withOpacity(0.1)
-                                      : Colors.white,
-                                  borderRadius: BorderRadius.circular(14),
-                                  boxShadow: _hoveredIndex == fieldIndex
-                                      ? [
-                                          BoxShadow(
-                                            color: Colors.blueAccent
-                                                .withOpacity(0.2),
-                                            blurRadius: 12,
-                                            offset: const Offset(0, 6),
-                                          ),
-                                        ]
-                                      : [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(
-                                              0.03,
-                                            ),
-                                            blurRadius: 8,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                        ],
-                                ),
-                                child: Row(
-                                  children: [
-                                    // Icon
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.08),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      padding: const EdgeInsets.all(8),
-                                      child: Icon(
-                                        _getIconForField(f),
-                                        color: Colors.black,
-                                        size: 22,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-
-                                    // Field name
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        f,
-                                        style: const TextStyle(
-                                          fontFamily: "abhayaLibre",
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ),
-
-                                    // Field value
-                                    Expanded(
-                                      flex: 5,
-                                      child: Text(
-                                        widget.treeControllers[index][f]!.text
-                                            .trim(),
-                                        textAlign: TextAlign.right,
-                                        style: const TextStyle(
-                                          fontFamily: "AbhayaLibre",
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                      ],
+  Widget _buildTreeCard(int index) {
+    return ScaleTransition(
+      scale: Tween<double>(begin: 0.9, end: 1.0).animate(
+        CurvedAnimation(
+          parent: _controller,
+          curve: Interval(
+            (index / widget.treeControllers.length),
+            1.0,
+            curve: Curves.easeOutBack,
+          ),
+        ),
+      ),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        margin: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Colors.white, Color(0xFFF7F7FF)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    "Tree ${index + 1} of ${widget.treeControllers.length}",
+                    style: const TextStyle(
+                      fontFamily: "sfproRoundSemiB",
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
                     ),
                   ),
-                );
-              },
-            ),
-          ),
-
-          // Bottom buttons
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.redAccent,
-                    textStyle: const TextStyle(fontSize: 16),
-                  ),
-                  child: const Text("Cancel"),
                 ),
                 const Spacer(),
-                ElevatedButton(
-                  onPressed: widget.onConfirm,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 28,
-                      vertical: 14,
+                InkWell(
+                  onTap: () => widget.onEdit(index),
+                  borderRadius: BorderRadius.circular(30),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    elevation: 3,
-                  ),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Save",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                      SizedBox(width: 6),
-                      Icon(Icons.arrow_forward, color: Colors.white),
-                    ],
+                    child: const Icon(Icons.edit, color: Colors.black),
                   ),
                 ),
               ],
             ),
+            const SizedBox(height: 16),
+
+            ...widget.fields.asMap().entries.map((entry) {
+              int fieldIndex = entry.key;
+              String f = entry.value;
+              return MouseRegion(
+                onEnter: (_) => setState(() => _hoveredIndex = fieldIndex),
+                onExit: (_) => setState(() => _hoveredIndex = -1),
+                child: AnimatedScale(
+                  scale: _hoveredIndex == fieldIndex ? 1.02 : 1.0,
+                  duration: const Duration(milliseconds: 200),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    margin: const EdgeInsets.symmetric(vertical: 6.0),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 14,
+                      horizontal: 16,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _hoveredIndex == fieldIndex
+                          ? Colors.blueAccent.withOpacity(0.1)
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: _hoveredIndex == fieldIndex
+                          ? [
+                              BoxShadow(
+                                color: Colors.blueAccent.withOpacity(0.2),
+                                blurRadius: 12,
+                                offset: const Offset(0, 6),
+                              ),
+                            ]
+                          : [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.03),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.08),
+                            shape: BoxShape.circle,
+                          ),
+                          padding: const EdgeInsets.all(8),
+                          child: Icon(
+                            _getIconForField(f),
+                            color: Colors.black,
+                            size: 22,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            f,
+                            style: const TextStyle(
+                              fontFamily: "abhayaLibre",
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                            widget.treeControllers[index][f]!.text.trim(),
+                            textAlign: TextAlign.right,
+                            style: const TextStyle(
+                              fontFamily: "AbhayaLibre",
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Title
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Text(
+                "Please review the details before saving",
+                style: const TextStyle(
+                  fontSize: 25,
+                  fontFamily: "sfproRoundSemiB",
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+
+            // 🔹 Summary card
+            _buildSummaryCard(),
+            const SizedBox(height: 16),
+
+            // 🔹 Tree cards
+            ...List.generate(widget.treeControllers.length, (index) {
+              return _buildTreeCard(index);
+            }),
+
+            const SizedBox(height: 80), // bottom spacing
+          ],
+        ),
+      ),
+
+      // Floating confirm button
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: widget.onConfirm,
+        label: const Text(
+          "Save",
+          style: TextStyle(
+            fontSize: 18,
+            fontFamily: "sfproRoundSemiB",
+            color: Colors.white,
           ),
-        ],
+        ),
+
+        splashColor: Colors.amber,
+        backgroundColor: Colors.blue,
+        //hoverColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
   }

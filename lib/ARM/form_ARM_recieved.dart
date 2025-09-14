@@ -234,6 +234,7 @@ class _AnimatedFallingSectionState extends State<_AnimatedFallingSection>
 
   @override
   Widget build(BuildContext context) {
+    final rmSent = Provider.of<RM_Sent>(context);
     return FadeTransition(
       opacity: _fade,
       child: SlideTransition(
@@ -245,6 +246,10 @@ class _AnimatedFallingSectionState extends State<_AnimatedFallingSection>
             form_ARM_Create(
               location: widget.location,
               position: widget.position,
+              serialnum: rmSent.s_num.toString(),
+              placeofcoupe: rmSent.poc.toString(),
+              letterno: rmSent.letter_no.toString(),
+              dateinformed: rmSent.date_informed.toString(),
             ),
           ],
         ),
