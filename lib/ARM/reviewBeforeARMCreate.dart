@@ -48,12 +48,13 @@ class _ReviewPageState extends State<ReviewPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  int _hoveredIndex = -1; // hover for tree fields
-  int _hoveredSummary = -1; // hover for summary
+
+  /// store hovered row for each tree separately
+  final Map<int, int> _hoveredIndices = {};
+  int _hoveredSummary = -1; // summary hover
 
   @override
   void initState() {
-
     super.initState();
     _controller = AnimationController(
       vsync: this,
@@ -82,20 +83,40 @@ class _ReviewPageState extends State<ReviewPage>
 
   Widget _buildSummaryCard() {
     final infoItems = [
-      {"label": "Serial No", "value": widget.serialnum},
-      {"label": "Date Informed", "value": widget.dateinformed_from_rm},
-      {"label": "Place of Coupe", "value": widget.placeofcoupe},
-      {"label": "Position", "value": widget.position},
-      
-      {"label": "location_office", "value": widget.location},
-      {"label": "Section No", "value": widget.new_sectionNumber},
-      {"label": "Place of Coupe", "value": widget.PlaceOfCoupe},
-      {"label": "Letter No", "value": widget.LetterNo},
-      {"label": "Condition", "value": widget.Condition},
-      {"label": "Officer Name", "value": widget.OfficerName},
-      {"label": "Officer Position", "value": widget.OfficerPosition},
-      {"label": "Date Informed", "value": widget.Dateinforemed},
-      {"label": "Tree Count", "value": widget.treeCount},
+      {
+        "label": "Serial No                           :",
+        "value": widget.serialnum,
+      },
+      {
+        "label": "Date Informed               :",
+        "value": widget.dateinformed_from_rm,
+      },
+      {"label": "Area of Coupe                :", "value": widget.placeofcoupe},
+      {
+        "label": "Position                            :",
+        "value": widget.position,
+      },
+      {"label": "location_office              :", "value": widget.location},
+      {
+        "label": "Section No                       :",
+        "value": widget.new_sectionNumber,
+      },
+      {"label": "Place of Coupe               :", "value": widget.PlaceOfCoupe},
+      {
+        "label": "Letter No                          :",
+        "value": widget.LetterNo,
+      },
+      {
+        "label": "Condition                        :",
+        "value": widget.Condition,
+      },
+      {"label": "Officer Name                  :", "value": widget.OfficerName},
+      {
+        "label": "Officer Position             :",
+        "value": widget.OfficerPosition,
+      },
+      {"label": "Date Informed               :", "value": widget.Dateinforemed},
+      {"label": "Tree Count                     :", "value": widget.treeCount},
     ];
 
     return ScaleTransition(
@@ -197,13 +218,13 @@ class _ReviewPageState extends State<ReviewPage>
     );
   }
 
-  Widget _buildTreeCard(int index) {
+  Widget _buildTreeCard(int treeIndex) {
     return ScaleTransition(
       scale: Tween<double>(begin: 0.9, end: 1.0).animate(
         CurvedAnimation(
           parent: _controller,
           curve: Interval(
-            (index / widget.treeControllers.length),
+            (treeIndex / widget.treeControllers.length),
             1.0,
             curve: Curves.easeOutBack,
           ),
@@ -243,7 +264,7 @@ class _ReviewPageState extends State<ReviewPage>
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    "Tree ${index + 1} of ${widget.treeControllers.length}",
+                    "Tree ${treeIndex + 1} of ${widget.treeControllers.length}",
                     style: const TextStyle(
                       fontFamily: "sfproRoundSemiB",
                       fontSize: 18,
@@ -254,7 +275,7 @@ class _ReviewPageState extends State<ReviewPage>
                 ),
                 const Spacer(),
                 InkWell(
-                  onTap: () => widget.onEdit(index),
+                  onTap: () => widget.onEdit(treeIndex),
                   borderRadius: BorderRadius.circular(30),
                   child: Container(
                     padding: const EdgeInsets.all(8),
@@ -272,11 +293,16 @@ class _ReviewPageState extends State<ReviewPage>
             ...widget.fields.asMap().entries.map((entry) {
               int fieldIndex = entry.key;
               String f = entry.value;
+              final isHovered =
+                  _hoveredIndices[treeIndex] != null &&
+                  _hoveredIndices[treeIndex] == fieldIndex;
+
               return MouseRegion(
-                onEnter: (_) => setState(() => _hoveredIndex = fieldIndex),
-                onExit: (_) => setState(() => _hoveredIndex = -1),
+                onEnter: (_) =>
+                    setState(() => _hoveredIndices[treeIndex] = fieldIndex),
+                onExit: (_) => setState(() => _hoveredIndices[treeIndex] = -1),
                 child: AnimatedScale(
-                  scale: _hoveredIndex == fieldIndex ? 1.02 : 1.0,
+                  scale: isHovered ? 1.02 : 1.0,
                   duration: const Duration(milliseconds: 200),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
@@ -286,11 +312,11 @@ class _ReviewPageState extends State<ReviewPage>
                       horizontal: 16,
                     ),
                     decoration: BoxDecoration(
-                      color: _hoveredIndex == fieldIndex
+                      color: isHovered
                           ? Colors.blueAccent.withOpacity(0.1)
                           : Colors.white,
                       borderRadius: BorderRadius.circular(14),
-                      boxShadow: _hoveredIndex == fieldIndex
+                      boxShadow: isHovered
                           ? [
                               BoxShadow(
                                 color: Colors.blueAccent.withOpacity(0.2),
@@ -336,7 +362,7 @@ class _ReviewPageState extends State<ReviewPage>
                         Expanded(
                           flex: 5,
                           child: Text(
-                            widget.treeControllers[index][f]!.text.trim(),
+                            widget.treeControllers[treeIndex][f]!.text.trim(),
                             textAlign: TextAlign.right,
                             style: const TextStyle(
                               fontFamily: "AbhayaLibre",
@@ -358,6 +384,29 @@ class _ReviewPageState extends State<ReviewPage>
     );
   }
 
+  void _showRoundDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20), // round corner
+          ),
+          content: const Text(
+            "This is a rounded dialog box!",
+            style: TextStyle(fontSize: 18),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Close"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -368,11 +417,11 @@ class _ReviewPageState extends State<ReviewPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Title
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
               child: Text(
                 "Please review the details before saving",
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 25,
                   fontFamily: "sfproRoundSemiB",
                   fontWeight: FontWeight.bold,
@@ -381,23 +430,23 @@ class _ReviewPageState extends State<ReviewPage>
               ),
             ),
 
-            // 🔹 Summary card
             _buildSummaryCard(),
             const SizedBox(height: 16),
 
-            // 🔹 Tree cards
             ...List.generate(widget.treeControllers.length, (index) {
               return _buildTreeCard(index);
             }),
 
-            const SizedBox(height: 80), // bottom spacing
+            const SizedBox(height: 80),
           ],
         ),
       ),
 
-      // Floating confirm button
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: widget.onConfirm,
+        onPressed: () {
+          widget.onConfirm();
+          _showRoundDialog(); // just demo, remove if not needed
+        },
         label: const Text(
           "Save",
           style: TextStyle(
@@ -406,10 +455,8 @@ class _ReviewPageState extends State<ReviewPage>
             color: Colors.white,
           ),
         ),
-
         splashColor: Colors.amber,
         backgroundColor: Colors.blue,
-        //hoverColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );

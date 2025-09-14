@@ -113,7 +113,7 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
   void _review() {
     Navigator.of(context).push(
       PageRouteBuilder(
-        opaque: false, // keeps background visible (like dialog)
+        opaque: false,
         barrierDismissible: false,
         pageBuilder: (_, __, ___) {
           return Center(
@@ -122,12 +122,10 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Container(
+              clipBehavior: Clip.antiAlias, // ✅ this clips corners
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 height: MediaQuery.of(context).size.height * 0.9,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                ),
                 child: ReviewPage(
                   fields: fields,
                   treeControllers: treeControllers,
@@ -140,14 +138,12 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
                   OfficerPosition: OfficerPosition,
                   Dateinforemed: Dateinforemed,
                   location: location,
-
                   serialnum: serialnum,
-                  //letterno: letterno,
                   placeofcoupe: placeofcoupe,
                   dateinformed_from_rm: dateinformed_from_rm,
                   position: position,
                   onEdit: (index) {
-                    Navigator.pop(context); // close dialog
+                    Navigator.pop(context);
                     setState(() {
                       currentIndex = index;
                     });
@@ -160,7 +156,7 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(0.0, 0.1); // slide from bottom
+          const begin = Offset(0.0, 0.1);
           const end = Offset.zero;
           const curve = Curves.easeOutCubic;
 
@@ -246,7 +242,7 @@ class _TreeQuesFormState extends State<TreeQuesForm> {
     }
     Map<String, String> timberReportheadlines = {
       "serialnum": serialnum,
-      
+
       "placeofcoupe": placeofcoupe,
       "dateinformed_from_rm": dateinformed_from_rm,
       "doner_details": new_sectionNumber,
