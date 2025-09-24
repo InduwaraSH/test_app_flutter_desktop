@@ -45,12 +45,10 @@ class _homeState extends State<middle_RM_Recived> {
 
   late Query dbrefRM_related_ARM_Offices = FirebaseDatabase.instance
       .ref()
-      .child("ARM_branch_data_saved")
-      .child(location)
-      .child("Recived");
+      .child("trees");
 
   Widget SENDItem({required Map Alerts}) {
-    bool isActive = selectedBranch == Alerts['Serial Number'];
+    bool isActive = selectedBranch == Alerts['serialnum'];
 
     Color bgColor = isActive ? Color.fromRGBO(61, 203, 63, 1) : Colors.white;
     Color textColor = isActive ? Colors.white : Colors.black;
@@ -61,7 +59,7 @@ class _homeState extends State<middle_RM_Recived> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          selectedBranch = Alerts['Serial Number'];
+          selectedBranch = Alerts['serialnum'];
         });
 
         // Provider.of<ARM_Selection_provider>(
@@ -96,7 +94,7 @@ class _homeState extends State<middle_RM_Recived> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  Alerts["placeOfCoupe"], // Galle / Matara
+                  Alerts["placeOfCoupe"] ?? "jk", // Galle / Matara
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -108,7 +106,7 @@ class _homeState extends State<middle_RM_Recived> {
             ),
             const SizedBox(height: 10),
             Text(
-              "Serial Number: ${Alerts['Serial Number']}",
+              "Serial Number: ${Alerts['serialnum']}",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -142,7 +140,7 @@ class _homeState extends State<middle_RM_Recived> {
               int index,
             ) {
               final alerts = Map<String, dynamic>.from(
-                datasnapshot.value as Map,
+                datasnapshot.child("timberReportheadlines").value as Map,
               );
               alerts['key'] = datasnapshot.key;
               return SENDItem(Alerts: alerts);
